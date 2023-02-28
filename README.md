@@ -1,4 +1,4 @@
-# imac_progwebvuejs
+# IMAC - Projet développement web Node.js
 
 ## Project setup
 ```

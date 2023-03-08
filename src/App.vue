@@ -7,13 +7,30 @@
   <QuizFilters />
   <QuizCover imgSrc="https://cdns-images.dzcdn.net/images/cover/0c424dbe627530cd06a6fd408baba3f3/500x500.jpg"/>
   <QuizAnswerField />
+  <div id="test"></div>
 </template>
 
 <script>
 import QuizFilters from './components/QuizFilters.vue'
 import QuizCover from './components/QuizCover.vue'
 import QuizAnswerField from './components/QuizAnswerField.vue'
-import getTopSong from './services/api/musicbrainz.js'
+import test from './services/api/musicbrainz.js'
+
+const changeCover = async () => {
+  const data = await test.getTopSongs2();
+  console.log(data['quality']);
+  document.querySelector('#test').innerHTML=data['quality'];
+}
+
+changeCover();
+
+// const response = fetch("https://musicbrainz.org/ws/2/release/76df3287-6cda-33eb-8e9a-044b5e15ffdd?fmt=json") 
+// if (response.status == 200) {
+// 	const data = response.json()
+//   console.log(data);
+// } else {
+//   new Error(response.statusText)
+// }
 
 export default {
   name: 'App',
@@ -23,8 +40,6 @@ export default {
     QuizAnswerField
   }
 }
-
-console.log(getTopSong['quality']);
 </script>
 
 <style>

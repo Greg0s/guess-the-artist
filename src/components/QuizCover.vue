@@ -7,8 +7,15 @@
 <script>
 export default {
   name: 'QuizCover',
-  props: {
-    imgSrc: String
+  data() {
+    return { 
+      imgSrc : "empty"
+    }
+  },
+  methods: {
+    setCover(imgUrl){
+      this.imgSrc = imgUrl;
+    }
   }
 }
 </script>

@@ -5,7 +5,7 @@
 
   <h1 class="title">GuessTheArtist</h1>
   <QuizFilters />
-  <QuizCover imgSrc="https://cdns-images.dzcdn.net/images/cover/0c424dbe627530cd06a6fd408baba3f3/500x500.jpg"/>
+  <QuizCover/>
   <QuizAnswerField />
   <div id="test"></div>
 </template>
@@ -14,23 +14,31 @@
 import QuizFilters from './components/QuizFilters.vue'
 import QuizCover from './components/QuizCover.vue'
 import QuizAnswerField from './components/QuizAnswerField.vue'
-import test from './services/api/musicbrainz.js'
+import lastfm from './services/api/lastfm.js'
 
-const changeCover = async () => {
-  const data = await test.getTopSongs2();
-  console.log(data['quality']);
-  document.querySelector('#test').innerHTML=data['quality'];
+const getDataset = async () => {
+  const data = await lastfm.getTopSongs();
+  let tracks = data.tracks.track;
+  return tracks;
+  //console.log(data.tracks.track);
+  // console.log(data[0]["name"]);
+  //document.querySelector('#test').innerHTML=tracks[5].name;
 }
 
-changeCover();
+function getRandomSong(songList) {
+  //let rand = floor(Math.random()*50);
+  return songList[5];
+}
 
-// const response = fetch("https://musicbrainz.org/ws/2/release/76df3287-6cda-33eb-8e9a-044b5e15ffdd?fmt=json") 
-// if (response.status == 200) {
-// 	const data = response.json()
-//   console.log(data);
-// } else {
-//   new Error(response.statusText)
-// }
+function play(song){
+  QuizCover.setCover(song.image[3]);
+  QuizAnswerField.setAnswer(song.artist.name)
+}
+
+let songList = await getDataset();
+let song = getRandomSong(songList);
+console.log(song);
+play(song);
 
 export default {
   name: 'App',

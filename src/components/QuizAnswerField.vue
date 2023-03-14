@@ -1,12 +1,33 @@
 <template>
     <input class="textField" type="text" placeholder="Type your answer here"/>
-    <input type="submit" value=" "/>
+    <input id="test" v-model="answer"/>
+    {{ answer }}
+    <button v-on:click="foo">Delete</button>
 </template>
 
 <script>
 export default{
-    name: 'QuizAnswerField'
+    name: 'QuizAnswerField',
+    data() {
+        return {
+            answer: "toto",
+            artist: "empty"
+        }
+    },
+    methods: {
+        foo() {
+            this.answer = ""
+        },
+        setAnswer(artistName){
+            this.artist = artistName;
+        }
+        // checkAnswer() {
+
+        //     if(this.answer == )
+        // }
+    }
 }
+
 </script>
 
 <style>

@@ -5,7 +5,7 @@
 
   <h1 class="title">GuessTheArtist</h1>
   <QuizFilters />
-  <QuizCover/>
+  <QuizCover :imgSource="cover"/>
   <QuizAnswerField />
   <div id="test"></div>
 </template>
@@ -16,38 +16,45 @@ import QuizCover from './components/QuizCover.vue'
 import QuizAnswerField from './components/QuizAnswerField.vue'
 import lastfm from './services/api/lastfm.js'
 
-const getDataset = async () => {
-  const data = await lastfm.getTopSongs();
-  let tracks = data.tracks.track;
-  return tracks;
-  //console.log(data.tracks.track);
-  // console.log(data[0]["name"]);
-  //document.querySelector('#test').innerHTML=tracks[5].name;
-}
-
-function getRandomSong(songList) {
-  //let rand = floor(Math.random()*50);
-  return songList[5];
-}
-
-function play(song){
-  QuizCover.setCover(song.image[3]);
-  QuizAnswerField.setAnswer(song.artist.name)
-}
-
-let songList = await getDataset();
-let song = getRandomSong(songList);
-console.log(song);
-play(song);
-
 export default {
   name: 'App',
   components: {
     QuizFilters,
     QuizCover,
     QuizAnswerField
+  }, 
+  created() {
+    this.play();
+    //this.cover = "https://cdns-images.dzcdn.net/images/cover/0c424dbe627530cd06a6fd408baba3f3/500x500.jpg";
+  },
+  data() {
+    return { 
+      cover : ""
+    }
+  },
+  methods :{
+    async getDataset(){
+      const data = await lastfm.getTopSongs();
+      let tracks = data.tracks.track;
+      return tracks;
+    },
+    getRandomSong(songList) {
+      //let rand = floor(Math.random()*50);
+      return songList[5];
+    },
+    async getSong(){
+      let songList = await getDataset();
+      let song = getRandomSong(songList);
+      console.log(song);
+      play(song);
+    },
+    play(song){
+      QuizCover.setCover(song.image[3]);
+      QuizAnswerField.setAnswer(song.artist.name)
+    }
   }
 }
+
 </script>
 
 <style>

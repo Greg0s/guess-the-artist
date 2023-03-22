@@ -25,11 +25,14 @@ export default {
   }, 
   created() {
     this.play();
-    //this.cover = "https://cdns-images.dzcdn.net/images/cover/0c424dbe627530cd06a6fd408baba3f3/500x500.jpg";
+    //this.cover = "https://lastfm.freetls.fastly.net/i/u/300x300/9636b4b70d6a4aed99ba42859a9d3297.png";
   },
   data() {
     return { 
-      cover : ""
+      cover : "",
+      song : "",
+      mbid : "",
+      track : ""
     }
   },
   methods :{
@@ -43,14 +46,28 @@ export default {
       return songList[5];
     },
     async getSong(){
-      let songList = await getDataset();
-      let song = getRandomSong(songList);
-      console.log(song);
-      play(song);
+      let songList = await this.getDataset();
+      this.song = this.getRandomSong(songList);
+      this.play();
     },
-    play(song){
-      QuizCover.setCover(song.image[3]);
-      QuizAnswerField.setAnswer(song.artist.name)
+    async getCover(){
+      this.track = await lastfm.getCover(this.mbid);
+      //console.log(this.track);
+      this.cover = this.track.track.album.image[3]["#text"];
+      console.log(this.cover);
+    },
+    play(){
+      this.getSong();
+      console.log(this.song);
+      //QuizCover.setCover(song.image[3]);
+      //console.log(this.song);
+      //console.log(this.song.artist.name);
+
+      this.mbid = this.song.mbid;
+      //this.cover = this.song.image[1].text;
+      this.artist = this.song.artist.name;
+      this.getCover();
+      //QuizAnswerField.setAnswer(song.artist.name)
     }
   }
 }

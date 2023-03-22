@@ -7,6 +7,13 @@ let lastfm = {
             throw new Error("Something went wrong!");
         }
         return res.json();
+    },
+    async getCover(mbid){
+        let res = await fetch('http://ws.audioscrobbler.com/2.0/?method=track.getInfo&api_key='+ api_key +'&mbid=' + mbid +'&format=json');
+        if(!res) {
+            throw new Error("Something went wrong!");
+        }
+        return res.json();
     }
 }
 

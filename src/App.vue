@@ -6,7 +6,7 @@
   <h1 class="title">GuessTheArtist</h1>
   <QuizFilters />
   <QuizCover :imgSource="artistPic"/>
-  <QuizAnswerField />
+  <QuizAnswerField :artistName="artistName" />
   <div id="test"></div>
 </template>
 
@@ -25,13 +25,13 @@ export default {
   }, 
   async created() {
     await this.play();
-    //this.cover = "https://lastfm.freetls.fastly.net/i/u/300x300/9636b4b70d6a4aed99ba42859a9d3297.png";
   },
   data() {
     return { 
       artistId  : "",
       artist    : "",
-      artistPic : ""
+      artistPic : "",
+      artistName : ""
     }
   },
   methods :{
@@ -50,13 +50,13 @@ export default {
     },
     async getArtistInfos(){
         this.artist = await spotify.getArtist(this.artistId);
-        console.log(this.artist);
+        //console.log(this.artist);
         this.artistPic = this.artist.images[0].url;
         this.artistName = this.artist.name;
       },
     async play(){
       await this.getArtistId();
-      console.log(this.artistId);
+      //console.log(this.artistId);
       await this.getArtistInfos();
     }
   }

@@ -1,7 +1,6 @@
 <template>
-    <input class="textField" type="text" placeholder="Type your answer here"/>
-    <input id="test" v-model="answer"/>
-    {{ answer }}
+    <input class="textField" id="test" v-model="answer"/>
+    <!-- {{ answer }} -->
     <button v-on:click="foo">Delete</button>
 </template>
 
@@ -22,9 +21,13 @@ export default{
             this.artist = artistName;
         }
         // checkAnswer() {
+        //     if(this.answer == artistName){
 
-        //     if(this.answer == )
+        //     }
         // }
+    },
+    props : {
+        artistName : String
     }
 }
 

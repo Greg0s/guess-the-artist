@@ -5,7 +5,7 @@
 
   <h1 class="title">GuessTheArtist</h1>
   <QuizFilters />
-  <QuizCover :imgSource="cover"/>
+  <QuizCover :imgSource="artistPic"/>
   <QuizAnswerField />
   <div id="test"></div>
 </template>
@@ -14,7 +14,7 @@
 import QuizFilters from './components/QuizFilters.vue'
 import QuizCover from './components/QuizCover.vue'
 import QuizAnswerField from './components/QuizAnswerField.vue'
-import lastfm from './services/api/lastfm.js'
+import spotify from './services/api/spotify.js'
 
 export default {
   name: 'App',
@@ -23,51 +23,41 @@ export default {
     QuizCover,
     QuizAnswerField
   }, 
-  created() {
-    this.play();
+  async created() {
+    await this.play();
     //this.cover = "https://lastfm.freetls.fastly.net/i/u/300x300/9636b4b70d6a4aed99ba42859a9d3297.png";
   },
   data() {
     return { 
-      cover : "",
-      song : "",
-      mbid : "",
-      track : ""
+      artistId  : "",
+      artist    : "",
+      artistPic : ""
     }
   },
   methods :{
     async getDataset(){
-      const data = await lastfm.getTopSongs();
-      let tracks = data.tracks.track;
-      return tracks;
+      const data = await spotify.getSongs();
+      //console.log(data);
+      return data.items;
     },
     getRandomSong(songList) {
-      //let rand = floor(Math.random()*50);
-      return songList[5];
+      let rand = Math.floor(Math.random()*50);
+      return songList[rand];
     },
-    async getSong(){
+    async getArtistId(){
       let songList = await this.getDataset();
-      this.song = this.getRandomSong(songList);
-      this.play();
+      this.artistId = this.getRandomSong(songList).track.artists[0].id;
     },
-    async getCover(){
-      this.track = await lastfm.getCover(this.mbid);
-      //console.log(this.track);
-      this.cover = this.track.track.album.image[3]["#text"];
-      console.log(this.cover);
-    },
-    play(){
-      this.getSong();
-      console.log(this.song);
-      //QuizCover.setCover(song.image[3]);
-      //console.log(this.song);
-      //console.log(this.song.artist.name);
-
-      this.mbid = this.song.mbid;
-      //this.cover = this.song.image[1].text;
-      this.artist = this.song.artist.name;
-      this.getCover();
-      //QuizAnswerField.setAnswer(song.artist.name)
+    async getArtistInfos(){
+        this.artist = await spotify.getArtist(this.artistId);
+        console.log(this.artist);
+        this.artistPic = this.artist.images[0].url;
+        this.artistName = this.artist.name;
+      },
+    async play(){
+      await this.getArtistId();
+      console.log(this.artistId);
+      await this.getArtistInfos();
     }
   }
 }

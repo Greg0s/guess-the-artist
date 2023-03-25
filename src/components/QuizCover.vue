@@ -22,7 +22,14 @@ export default {
 <style>
     img{
         border-radius: 25px;
-        max-width: 600px;
-        width : 75%;
+        max-height: 600px;
+
+    }
+
+    @media screen and (max-width: 800px) {
+      img{
+        max-height: none;
+        width: 75vw;
+      }
     }
 </style>

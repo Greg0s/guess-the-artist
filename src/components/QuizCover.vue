@@ -1,6 +1,6 @@
 <template>
     <div id="cover">
-        <img alt="cover art" :src="imgSource"/>
+        <img alt="Artist picture" :src="imgSource"/>
     </div>
 </template>
 
@@ -22,5 +22,7 @@ export default {
 <style>
     img{
         border-radius: 25px;
+        max-width: 600px;
+        width : 75%;
     }
 </style>

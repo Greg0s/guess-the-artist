@@ -1,33 +1,25 @@
 <template>
-    <input class="textField" id="test" v-model="answer"/>
-    <!-- {{ answer }} -->
-    <button v-on:click="foo">Delete</button>
+    <input @keyup.enter="emit" class="textField" id="test" v-model="attempt"/>
+    <button @click="clear">Delete</button>
 </template>
 
 <script>
 export default{
     name: 'QuizAnswerField',
+    emits : ["attempt"],
     data() {
         return {
-            answer: "toto",
-            artist: "empty"
+            attempt: ""
         }
     },
     methods: {
-        foo() {
-            this.answer = ""
+        clear() {
+            this.attempt = ""
         },
-        setAnswer(artistName){
-            this.artist = artistName;
+        emit(){
+            this.$emit('attempt', { message : this.attempt});
+            this.clear();
         }
-        // checkAnswer() {
-        //     if(this.answer == artistName){
-
-        //     }
-        // }
-    },
-    props : {
-        artistName : String
     }
 }
 

@@ -6,7 +6,7 @@
   <h1 class="title">GuessTheArtist</h1>
   <QuizFilters />
   <QuizCover :imgSource="artistPic"/>
-  <QuizAnswerField :artistName="artistName" />
+  <QuizAnswerField @attempt="checkAnswer" />
   <div id="test"></div>
 </template>
 
@@ -58,6 +58,12 @@ export default {
       await this.getArtistId();
       //console.log(this.artistId);
       await this.getArtistInfos();
+    },
+    checkAnswer(payload){
+      console.log(this.artistName);
+      if(this.artistName.toLowerCase() == payload.message.toLowerCase()){
+        this.play();
+      }
     }
   }
 }

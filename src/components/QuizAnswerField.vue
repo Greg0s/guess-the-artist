@@ -1,12 +1,13 @@
 <template>
-    <input @keyup.enter="emit" class="textField" id="test" v-model="attempt"/>
+    <input @keyup.enter="checkAnswer" class="textField" id="test" v-model="attempt"/>
     <button @click="clear">Delete</button>
+    <button @click="skip">Skip</button>
 </template>
 
 <script>
 export default{
     name: 'QuizAnswerField',
-    emits : ["attempt"],
+    emits : ["attempt", "skip"],
     data() {
         return {
             attempt: ""
@@ -16,9 +17,15 @@ export default{
         clear() {
             this.attempt = ""
         },
-        emit(){
-            this.$emit('attempt', { message : this.attempt});
+        toApp(msg){
+            this.$emit('attempt', { message : msg});
             this.clear();
+        },
+        checkAnswer(){
+            this.toApp(this.attempt);
+        },
+        skip(){
+            this.$emit("skip");
         }
     }
 }

@@ -6,7 +6,7 @@
   <h1 class="title">GuessTheArtist</h1>
   <QuizFilters />
   <QuizCover :imgSource="artistPic"/>
-  <QuizAnswerField @attempt="checkAnswer" />
+  <QuizAnswerField @attempt="checkAnswer" @skip="skipArtist" />
   <div id="test"></div>
 </template>
 
@@ -64,6 +64,9 @@ export default {
       if(this.artistName.toLowerCase() == payload.message.toLowerCase()){
         this.play();
       }
+    },
+    skipArtist(){
+      this.play();
     }
   }
 }

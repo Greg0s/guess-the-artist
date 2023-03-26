@@ -1,5 +1,9 @@
 # IMAC - Projet développement web Node.js
 
+## Project description
+Guess The Artist: find the artist's name from its picture!
+Made using the [Spotify API](https://developer.spotify.com/documentation/web-api/)
+
 ## Project setup
 ```
 npm install

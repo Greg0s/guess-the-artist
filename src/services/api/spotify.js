@@ -40,6 +40,19 @@ let spotify = {
             throw new Error("Something went wrong!");
         }
         return res.json();
+    },
+    async getTopSongsArtist(id){
+        if(bearer_spotify == ""){await newToken()}
+        let res = await fetch('https://api.spotify.com/v1/artists/' + id + '/top-tracks?market=US',{
+            method: "GET",
+            headers: {
+                "Authorization" : "Bearer " + bearer_spotify
+            }
+        });
+        if(!res) {
+            throw new Error("Something went wrong!");
+        }
+        return res.json();
     }
 }
 

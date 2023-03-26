@@ -6,13 +6,7 @@
 
 <script>
 export default {
-  name: 'QuizCover',
-
-  methods: {
-    setCover(imgUrl){
-      this.imgSrc = imgUrl;
-    }
-  }, 
+  name: 'QuizCover', 
   props: {
     imgSource : String
   }

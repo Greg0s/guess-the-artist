@@ -4,16 +4,17 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Judson:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
 
   <h1 class="title">GuessTheArtist</h1>
-  <QuizFilters />
+  <QuizFilters/>
+  <QuizScore :gameScore="score" :total="attemptsNb" :gameSR="successRate" />
   <QuizCover :imgSource="artistPic"/>
   <QuizAnswerField @attempt="checkAnswer" @skip="skipArtist" />
-  <div id="test"></div>
 </template>
 
 <script>
 import QuizFilters from './components/QuizFilters.vue'
 import QuizCover from './components/QuizCover.vue'
 import QuizAnswerField from './components/QuizAnswerField.vue'
+import QuizScore from './components/QuizScore.vue'
 import spotify from './services/api/spotify.js'
 
 export default {
@@ -21,7 +22,8 @@ export default {
   components: {
     QuizFilters,
     QuizCover,
-    QuizAnswerField
+    QuizAnswerField,
+    QuizScore
   }, 
   async created() {
     await this.play();
@@ -31,7 +33,10 @@ export default {
       artistId  : "",
       artist    : "",
       artistPic : "",
-      artistName : ""
+      artistName : "",
+      score : 0,
+      successRate : 0,
+      attemptsNb : 0
     }
   },
   methods :{
@@ -61,12 +66,21 @@ export default {
     },
     checkAnswer(payload){
       console.log(this.artistName);
+      this.attemptsNb ++;
       if(this.artistName.toLowerCase() == payload.message.toLowerCase()){
         this.play();
+        this.score ++;
       }
+      this.updateSR();
     },
     skipArtist(){
+      this.attemptsNb ++;
       this.play();
+    },
+    updateSR(){
+      if(this.attemptsNb > 0){
+        this.successRate = Math.floor(this.score*100/this.attemptsNb);
+      }
     }
   }
 }

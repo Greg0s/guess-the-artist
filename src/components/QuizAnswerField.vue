@@ -1,5 +1,5 @@
 <template>
-    <input @keyup.enter="checkAnswer" class="textField" id="test" v-model="attempt"/>
+    <input @keyup.enter="checkAnswer" class="textField" v-model="attempt"/>
     <button @click="clear">Delete</button>
     <button @click="skip">Skip</button>
 </template>

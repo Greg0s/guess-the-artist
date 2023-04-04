@@ -1,12 +1,12 @@
-import { id_spotify } from './api_key.js';
-let bearer_spotify = "";
+import { idSpotify } from './apiKey.js';
+let bearerSpotify = "";
 
 let spotify = {
     async getAccessToken(){
         let res = await fetch('https://accounts.spotify.com/api/token?grant_type=client_credentials', {
             method: "POST",
             headers: {
-                "Authorization" : "Basic " + id_spotify,
+                "Authorization" : "Basic " + idSpotify,
                 "Content-Type" : "application/x-www-form-urlencoded"
             }
         });
@@ -16,11 +16,11 @@ let spotify = {
         return res.json();
     },
     async getSongs(){   
-        if(bearer_spotify == ""){await newToken()}
+        if(bearerSpotify == ""){await newToken()}
         let res = await fetch('https://api.spotify.com/v1/playlists/1ISSOeZLHpzuOJ0CdSYwgD/tracks', {
             method: "GET",
             headers: {
-                "Authorization" : "Bearer " + bearer_spotify
+                "Authorization" : "Bearer " + bearerSpotify
             }
         });
         if(!res) {
@@ -29,11 +29,11 @@ let spotify = {
         return res.json();
     },
     async getArtist(id){
-        if(bearer_spotify == ""){await newToken()}
+        if(bearerSpotify == ""){await newToken()}
         let res = await fetch('https://api.spotify.com/v1/artists/' + id, {
             method: "GET",
             headers: {
-                "Authorization" : "Bearer " + bearer_spotify
+                "Authorization" : "Bearer " + bearerSpotify
             }
         });
         if(!res) {
@@ -42,11 +42,11 @@ let spotify = {
         return res.json();
     },
     async getTopSongsArtist(id){
-        if(bearer_spotify == ""){await newToken()}
+        if(bearerSpotify == ""){await newToken()}
         let res = await fetch('https://api.spotify.com/v1/artists/' + id + '/top-tracks?market=US',{
             method: "GET",
             headers: {
-                "Authorization" : "Bearer " + bearer_spotify
+                "Authorization" : "Bearer " + bearerSpotify
             }
         });
         if(!res) {
@@ -57,8 +57,8 @@ let spotify = {
 }
 
 async function newToken(){
-    bearer_spotify = await spotify.getAccessToken();
-    bearer_spotify = bearer_spotify.access_token;
+    bearerSpotify = await spotify.getAccessToken();
+    bearerSpotify = bearerSpotify.access_token;
 }
 setInterval(newToken(), 1000 * 60 * 60);
 

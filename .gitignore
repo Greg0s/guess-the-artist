@@ -24,4 +24,4 @@ pnpm-debug.log*
 
 # Api keys
 
-/src/services/api/api_key.js
+/src/services/api/apiKey.js

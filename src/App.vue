@@ -102,7 +102,7 @@ export default {
         this.artist = await spotify.getArtist(this.artistId);
         ////console.log(this.artist);
         this.artistPic = this.artist.images[0].url;
-        this.artistName = this.artist.name;
+        this.artistName = this.artist.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
         console.log(this.artist);
         this.artistGenres = this.artist.genres.join();
     },
@@ -112,7 +112,8 @@ export default {
     checkAnswer(payload){
       //console.log(this.artistName);
       this.attemptsNb ++;
-      if(this.artistName.toLowerCase() == payload.message.toLowerCase()){
+      let userAnswer = payload.message.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+      if(this.artistName.toLowerCase() == userAnswer){
         this.play();
         this.score ++;
       }
@@ -121,6 +122,7 @@ export default {
     skipArtist(){
       this.attemptsNb ++;
       this.play();
+      this.updateSR();
     },
     updateSR(){
       if(this.attemptsNb > 0){

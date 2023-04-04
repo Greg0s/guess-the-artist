@@ -27,6 +27,8 @@ export default {
   }, 
   async created() {
     //await this.init();
+    this.artistsHistory = "";
+    console.log(this.artistsHistory);
     await this.play();
   },
   data() {
@@ -40,7 +42,8 @@ export default {
       successRate : 0,
       attemptsNb : 0,
       tracksList : "",
-      genre:'all'
+      genre:"all",
+      artistsHistory: ""
     }
   },
   methods :{
@@ -85,14 +88,28 @@ export default {
             return "exit";
         }
       }
-      return track.artists[0].id;
+      if(this.artistsHistory.includes(track.artists[0].id)){
+        console.log('artiste deja passé');
+        return "exit";
+      }else{
+        this.artistsHistory += track.artists[0].id + " ";
+        console.log(this.artistsHistory);
+        return track.artists[0].id;
+      }
+
     },
     async getArtistId(){
       await this.getTracksList();
-      
+      let cpt = 0;
       do{
         this.artistId = await this.getInListFilters(this.tracksList, this.genre);
-      }while(this.artistId == "exit");
+        cpt++;
+      }while(this.artistId == "exit" && cpt < 50);
+      if(cpt == 50){
+        cpt = 0;
+        alert('No more artists to guess');
+        this.artistsHistory = "";
+      }
       //this.artistId = this.getRandomInList(this.tracksList).track.artists[0].id;
     },
     async getTracksList(){
@@ -103,7 +120,7 @@ export default {
         ////console.log(this.artist);
         this.artistPic = this.artist.images[0].url;
         this.artistName = this.artist.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
-        console.log(this.artist);
+        //console.log(this.artist);
         this.artistGenres = this.artist.genres.join();
     },
     async getArtistFromId(id){
@@ -139,7 +156,6 @@ export default {
       await this.getArtistInfos();
       console.log(this.artistGenres);
       console.log(this.artistName);
-
       }
   }
 }

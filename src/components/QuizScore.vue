@@ -25,6 +25,6 @@ export default{
 <style>
     #results{
         display: flex;
-        justify-content: space-around;
+        flex-direction: column;
     }
 </style>

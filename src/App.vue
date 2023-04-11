@@ -3,10 +3,13 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Judson:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
 
-  <h1 class="title">GuessTheArtist</h1>
+  <h1 class="title">Guess The Artist</h1>
   <QuizFilters @checkedGenre="setGenreFilter" />
-  <QuizScore :gameScore="score" :total="attemptsNb" :gameSR="successRate" />
-  <QuizCover :imgSource="artistPic"/>
+    <div class="topBox">
+      <QuizScore :gameScore="score" :total="attemptsNb" :gameSR="successRate" />
+      <QuizHistory class="history" :lastArtistName="lastArtist" :imgSource="lastArtistPic"/>
+    </div>
+    <QuizCover :imgSource="artistPic"/>
   <QuizAnswerField @attempt="checkAnswer" @skip="skipArtist" />
 </template>
 
@@ -15,6 +18,7 @@ import QuizFilters from './components/QuizFilters.vue'
 import QuizCover from './components/QuizCover.vue'
 import QuizAnswerField from './components/QuizAnswerField.vue'
 import QuizScore from './components/QuizScore.vue'
+import QuizHistory from './components/QuizHistory.vue'
 import spotify from './services/api/spotify.js'
 
 export default {
@@ -23,7 +27,8 @@ export default {
     QuizFilters,
     QuizCover,
     QuizAnswerField,
-    QuizScore
+    QuizScore, 
+    QuizHistory
   }, 
   async created() {
     //await this.init();
@@ -43,7 +48,9 @@ export default {
       attemptsNb : 0,
       tracksList : "",
       genre:"all",
-      artistsHistory: ""
+      artistsHistory: "",
+      lastArtist : "",
+      lastArtistPic : ""
     }
   },
   methods :{
@@ -81,11 +88,11 @@ export default {
       let track = this.getRandomInList(list).track;
       //console.log(track);
       let artist = await this.getArtistFromId(track.artists[0].id);
-      //console.log(artist);
+      console.log(artist);
       //let genres =['pop','rock','edm','rap']
       if(genre != "all"){
-          if(!artist.genres.join().toLowerCase().includes(genre)){
-            return "exit";
+        if(!artist.genres.join().toLowerCase().includes(genre)){
+          return "exit";
         }
       }
       if(this.artistsHistory.includes(track.artists[0].id)){
@@ -102,7 +109,7 @@ export default {
       await this.getTracksList();
       let cpt = 0;
       do{
-        this.artistId = await this.getInListFilters(this.tracksList, this.genre);
+        this.artistId = await this.getInListFilters(this.tracksList, this.genre, this.decade);
         cpt++;
       }while(this.artistId == "exit" && cpt < 50);
       if(cpt == 50){
@@ -131,6 +138,7 @@ export default {
       this.attemptsNb ++;
       let userAnswer = payload.message.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
       if(this.artistName.toLowerCase() == userAnswer){
+        this.setLastArtist();
         this.play();
         this.score ++;
       }
@@ -138,6 +146,7 @@ export default {
     },
     skipArtist(){
       this.attemptsNb ++;
+      this.setLastArtist();
       this.play();
       this.updateSR();
     },
@@ -149,6 +158,10 @@ export default {
     setGenreFilter(payload){
       this.genre = payload.message;
       console.log(this.genre);
+    },
+    setLastArtist(){
+      this.lastArtist = this.artistName;
+      this.lastArtistPic = this.artistPic;
     },
     async play(){
       await this.getArtistId();
@@ -171,12 +184,18 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
-}
-body{
-  font-family: 'Inter', sans-serif;
-}
-h1{
-  font-family: 'Judson', serif;
-}
-
+  }
+  body{
+    font-family: 'Inter', sans-serif;
+  }
+  h1{
+    font-family: 'Judson', serif;
+  }
+  .topBox{
+    display: flex;
+    width: 50vw;
+    margin: auto;
+    align-items: center;
+    justify-content: space-between;
+  }
 </style>

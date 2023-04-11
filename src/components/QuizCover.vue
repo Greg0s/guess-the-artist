@@ -16,8 +16,8 @@ export default {
 <style>
     img{
         border-radius: 25px;
-        max-height: 600px;
-
+        max-height: 50vh;
+        max-width: 50vw;
     }
 
     @media screen and (max-width: 800px) {

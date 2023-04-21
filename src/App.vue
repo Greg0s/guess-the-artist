@@ -54,12 +54,15 @@ export default {
       artistsHistory: "",
       lastArtist : "",
       lastArtistPic : "",
-      userTheme: "light-theme"
+      userTheme: "light-theme",
+      playlist: ['1ISSOeZLHpzuOJ0CdSYwgD', '37i9dQZF1DWTIfBdh7WtFL'],
+      playlistNb: 0
     }
   },
   methods :{
     async getDataset(){
-      const data = await spotify.getSongs();
+      console.log(this.playlist[this.playlistNb]);
+      const data = await spotify.getSongs(this.playlist[this.playlistNb]);
       //console.log(data);
       return data.items;
     },
@@ -115,11 +118,21 @@ export default {
       do{
         this.artistId = await this.getInListFilters(this.tracksList, this.genre, this.decade);
         cpt++;
-      }while(this.artistId == "exit" && cpt < 50);
-      if(cpt == 50){
+        console.log(cpt);
+      }while(this.artistId == "exit" && cpt < 5);
+      if(cpt == 5){
         cpt = 0;
-        alert('No more artists to guess');
-        this.artistsHistory = "";
+
+        if(this.playlistNb < this.playlist.length - 1){
+          this.playlistNb ++;
+          console.log("playlistNb update" + this.playlistNb);
+          this.play();
+        }
+        else{
+          alert('No more artists to guess');
+          this.artistsHistory = "";
+          this.playlistNb = 0;
+        }
       }
       //this.artistId = this.getRandomInList(this.tracksList).track.artists[0].id;
     },
@@ -173,6 +186,7 @@ export default {
       await this.getArtistInfos();
       console.log(this.artistGenres);
       console.log(this.artistName);
+      console.log('playlist nb : ' + this.playlistNb);
       }
   }
 }

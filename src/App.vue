@@ -3,6 +3,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Judson:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
 
+  <UIColorMode></UIColorMode>
   <h1 class="title">Guess The Artist</h1>
   <QuizFilters @checkedGenre="setGenreFilter" />
     <div class="topBox">
@@ -19,6 +20,7 @@ import QuizCover from './components/QuizCover.vue'
 import QuizAnswerField from './components/QuizAnswerField.vue'
 import QuizScore from './components/QuizScore.vue'
 import QuizHistory from './components/QuizHistory.vue'
+import UIColorMode from './components/UIColorMode.vue'
 import spotify from './services/api/spotify.js'
 
 export default {
@@ -28,7 +30,8 @@ export default {
     QuizCover,
     QuizAnswerField,
     QuizScore, 
-    QuizHistory
+    QuizHistory,
+    UIColorMode
   }, 
   async created() {
     //await this.init();
@@ -50,7 +53,8 @@ export default {
       genre:"all",
       artistsHistory: "",
       lastArtist : "",
-      lastArtistPic : ""
+      lastArtistPic : "",
+      userTheme: "light-theme"
     }
   },
   methods :{
@@ -182,7 +186,7 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
+  color: var(--text-primary-color);
   margin-top: 60px;
   }
   body{
@@ -197,5 +201,8 @@ export default {
     margin: auto;
     align-items: center;
     justify-content: space-between;
+  }
+  :root{
+    background-color: var(--background-color-primary);
   }
 </style>

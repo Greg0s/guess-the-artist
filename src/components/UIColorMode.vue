@@ -11,7 +11,7 @@
       <span id="light">☀️</span>
       <div
         class="switch-toggle"
-        :class="{ 'switch-toggle-checked': userTheme === 'dark-theme' }"
+        
       ></div>
       </label>
   </div>
@@ -44,14 +44,17 @@ export default {
         }
         },
         getMediaPreference() {
-        const hasDarkPreference = window.matchMedia(
-            "(prefers-color-scheme: dark)"
-        ).matches;
-        if (hasDarkPreference) {
-            return "dark-theme";
-        } else {
-            return "light-theme";
-        }
+          if(localStorage.getItem("user-theme")){
+            return localStorage.getItem("user-theme");
+          }
+          const hasDarkPreference = window.matchMedia(
+              "(prefers-color-scheme: dark)"
+          ).matches;
+          if (hasDarkPreference) {
+              return "dark-theme";
+          } else {
+              return "light-theme";
+          }
         },
         setTheme(theme){
         if(theme == "light-theme"){
@@ -112,7 +115,7 @@ export default {
 
 /* Define styles for the root window with dark - mode preference */
 :root.dark-theme {
-  --background-color-primary: #1e1e1e;
+  --background-color-primary: #2c3e50;
   --background-color-secondary: #2d2d30;
   --accent-color: #3f3f3f;
   --text-primary-color: #ddd;

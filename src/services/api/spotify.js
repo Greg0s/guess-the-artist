@@ -1,6 +1,9 @@
 import { idSpotify } from './apiKey.js';
 let bearerSpotify = "";
 
+//const playlist = '1ISSOeZLHpzuOJ0CdSYwgD'
+const playlist = '37i9dQZF1DWTIfBdh7WtFL'
+
 let spotify = {
     async getAccessToken(){
         let res = await fetch('https://accounts.spotify.com/api/token?grant_type=client_credentials', {
@@ -17,7 +20,7 @@ let spotify = {
     },
     async getSongs(){   
         if(bearerSpotify == ""){await newToken()}
-        let res = await fetch('https://api.spotify.com/v1/playlists/1ISSOeZLHpzuOJ0CdSYwgD/tracks', {
+        let res = await fetch('https://api.spotify.com/v1/playlists/' + playlist + '/tracks', {
             method: "GET",
             headers: {
                 "Authorization" : "Bearer " + bearerSpotify

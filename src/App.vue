@@ -5,13 +5,15 @@
 
   <UIColorMode></UIColorMode>
   <h1 class="title">Guess The Artist</h1>
-  <QuizFilters @checkedGenre="setGenreFilter" />
-    <div class="topBox">
-      <QuizScore :gameScore="score" :total="attemptsNb" :gameSR="successRate" />
-      <QuizHistory class="history" :lastArtistName="lastArtist" :imgSource="lastArtistPic"/>
-    </div>
-    <QuizCover :imgSource="artistPic"/>
-  <QuizAnswerField @attempt="checkAnswer" @skip="skipArtist" />
+  <div id="main">
+    <QuizFilters @checkedGenre="setGenreFilter" />
+      <div class="topBox">
+        <QuizScore :gameScore="score" :total="attemptsNb" :gameSR="successRate" />
+        <QuizHistory class="history" :lastArtistName="lastArtist" :imgSource="lastArtistPic"/>
+      </div>
+      <QuizCover :imgSource="artistPic"/>
+    <QuizAnswerField @attempt="checkAnswer" @skip="skipArtist" />
+  </div>
 </template>
 
 <script>
@@ -204,19 +206,24 @@ export default {
   margin-top: 60px;
   }
   body{
-    font-family: 'Inter', sans-serif;
+    /* font-family: 'Inter', sans-serif; */
+    font-family: 'Judson', serif;
   }
   h1{
     font-family: 'Judson', serif;
   }
   .topBox{
     display: flex;
-    width: 50vw;
     margin: auto;
     align-items: center;
     justify-content: space-between;
   }
   :root{
     background-color: var(--background-color-primary);
+  }
+  #main{
+    display: block;
+    margin: auto;
+    width: 25vw;
   }
 </style>

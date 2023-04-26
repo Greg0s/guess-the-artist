@@ -1,9 +1,9 @@
 <template>
   <div>
-    <h3>Last artist:</h3>
+    <h3>Last artist</h3>
     <div class="last-artist">
-      <img id="last-artist-pic" alt="Artist picture" :src="imgSource"/>
       <span id="name">{{ lastArtistName }}</span>
+      <img id="last-artist-pic" alt="Artist picture" :src="imgSource"/>
     </div>
   </div>
 </template>
@@ -25,7 +25,7 @@
     border-radius: 15px;
   }
   h3{
-    text-align: start;
+    text-align: end;
     font-size:1rem;
   }
   .last-artist{

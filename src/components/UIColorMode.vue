@@ -126,4 +126,9 @@ export default {
 #dark, #light{
   display: none;
 }
+.card{
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+}
 </style>

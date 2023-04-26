@@ -15,9 +15,13 @@ export default {
 
 <style>
     img{
-        border-radius: 25px;
-        max-height: 50vh;
-        max-width: 50vw;
+        width: 100%;
+    }
+
+    #cover{
+      height: 50vh;
+      overflow: hidden;
+      border-radius: 25px;
     }
 
     @media screen and (max-width: 800px) {

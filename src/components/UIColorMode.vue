@@ -106,19 +106,19 @@ export default {
 
 /* Define styles for the default root window element */
 :root {
-  --background-color-primary: #ebebeb;
-  --background-color-secondary: #fafafa;
-  --accent-color: #cacaca;
-  --text-primary-color: #2c3e50;
+  --background-color-primary: white;
+  --background-color-secondary: red;
+  --accent-color: rgba(182,234,218, 0.5);/*B6EADA*/
+  --text-primary-color: black;
   --element-size: 4rem;
 }
 
 /* Define styles for the root window with dark - mode preference */
 :root.dark-theme {
-  --background-color-primary: #2c3e50;
-  --background-color-secondary: #2d2d30;
-  --accent-color: #3f3f3f;
-  --text-primary-color: #ddd;
+  --background-color-primary: #333333;
+  --background-color-secondary: orange;
+  --accent-color: rgba(182,234,218, 0.5);
+  --text-primary-color: white;
 }
 .switch-checkbox {
   display: none;

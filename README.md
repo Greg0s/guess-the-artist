@@ -1,8 +1,13 @@
-# IMAC - Projet développement web Node.js
+# Guess The Artist
+<img src="https://i.imgur.com/SZKZOmT.jpg"  width="600" >
 
 ## Project description
-Guess The Artist: find the artist's name from its picture!
-Made using the [Spotify API](https://developer.spotify.com/documentation/web-api/)
+Find the artist's name from its picture!<br>
+Made using the [Spotify API](https://developer.spotify.com/documentation/web-api/).
+<br>
+[Play here](https://greg0s.github.io/guess-the-artist) (not finished, still under development ⚠️)
+
+
 
 ## Project setup
 ```

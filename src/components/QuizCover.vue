@@ -16,10 +16,11 @@ export default {
 <style>
     img{
         width: 100%;
+        border-radius: 25px;
     }
 
     #cover{
-      height: 50vh;
+      max-height: 50vh;
       overflow: hidden;
       border-radius: 25px;
     }

@@ -145,7 +145,7 @@ export default {
         this.artist = await spotify.getArtist(this.artistId);
         ////console.log(this.artist);
         this.artistPic = this.artist.images[0].url;
-        this.artistName = this.artist.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+        this.artistName = this.artist.name;
         //console.log(this.artist);
         this.artistGenres = this.artist.genres.join();
     },
@@ -156,7 +156,7 @@ export default {
       //console.log(this.artistName);
       this.attemptsNb ++;
       let userAnswer = payload.message.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-      if(this.artistName.toLowerCase() == userAnswer){
+      if(this.artistName.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase() == userAnswer){
         this.setLastArtist();
         this.play();
         this.score ++;
@@ -198,32 +198,37 @@ export default {
 <style>
 
 #app {
-  font-family: 'Inter', serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: var(--text-primary-color);
   margin-top: 60px;
-  }
-  body{
-    /* font-family: 'Inter', sans-serif; */
-    font-family: 'Judson', serif;
-  }
-  h1{
-    font-family: 'Judson', serif;
-  }
-  .topBox{
-    display: flex;
-    margin: auto;
-    align-items: center;
-    justify-content: space-between;
-  }
-  :root{
-    background-color: var(--background-color-primary);
-  }
+}
+body{
+  /* font-family: 'Inter', sans-serif; */
+  font-family: 'Judson', serif;
+}
+h1{
+  font-family: 'Judson', serif;
+}
+.topBox{
+  display: flex;
+  margin: auto;
+  align-items: center;
+  justify-content: space-between;
+  margin: 1rem 0 1rem 0;
+}
+:root{
+  background-color: var(--background-color-primary);
+}
+#main{
+  display: block;
+  margin: auto;
+  width: 25vw;
+}
+@media screen and (max-width: 800px) {
   #main{
-    display: block;
-    margin: auto;
-    width: 25vw;
+    width: 65vw;
   }
+}
 </style>

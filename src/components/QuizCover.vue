@@ -8,7 +8,7 @@
 export default {
   name: 'QuizCover', 
   props: {
-    imgSource : String
+    imgSource : String,
   }
 }
 </script>
@@ -26,7 +26,7 @@ export default {
     }
 
     @media screen and (max-width: 800px) {
-      img{
+      #cover{
         max-height: none;
         width: 75vw;
       }

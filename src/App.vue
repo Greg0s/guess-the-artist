@@ -6,7 +6,7 @@
   <UIColorMode></UIColorMode>
   <h1 class="title">Guess The Artist</h1>
   <div id="main">
-    <QuizFilters @checkedGenre="setGenreFilter" />
+    <QuizFilters @checkedGenre="setGenreFilter" @checkedDecade="setDecadeFilter" />
       <div class="topBox">
         <QuizScore :gameScore="score" :total="attemptsNb" :gameSR="successRate" />
         <QuizHistory class="history" :lastArtistName="lastArtist" :imgSource="lastArtistPic"/>
@@ -48,16 +48,18 @@ export default {
       artistPic : "",
       artistName : "",
       artistGenres :"",
+      artistDecades : "",
       score : 0,
       successRate : 0,
       attemptsNb : 0,
       tracksList : "",
       genre:"all",
+      decade: "all",
       artistsHistory: "",
       lastArtist : "",
       lastArtistPic : "",
       userTheme: "light-theme",
-      playlist: ['1ISSOeZLHpzuOJ0CdSYwgD', '37i9dQZF1DWTIfBdh7WtFL'],
+      playlist: ['0XXN2jKGfxhnAxzosyjJbd','1ISSOeZLHpzuOJ0CdSYwgD', '37i9dQZF1DWTIfBdh7WtFL'],
       playlistNb: 0
     }
   },
@@ -71,29 +73,37 @@ export default {
     async getArtistDecades(artistId){
       let topSongs = await spotify.getTopSongsArtist(artistId);
       let artistDecades ="";
-      let d_1980 = "1980-01-01";
-      let d_1990 = "1990-01-01";
-      let d_2000 = "2000-01-01";
-      let d_2010 = "2010-01-01";
-      let d_2020 = "2020-01-01";
+      // let d_1980 = new Date("1980-01-01");
+      // let d_1990 = new Date("1990-01-01");
+      let d_2000 = new Date("2000-01-01");
+      // let d_2010 = new Date("2010-01-01");
+      // let d_2020 = new Date("2020-01-01");
       let date;
       topSongs.tracks.forEach(track => {
-        date = track.album.release_date;
-        if(date < d_1980) { artistDecades += "b1980 " } else
-        if(date < d_1990) { artistDecades += "1980 " } else
-        if(date < d_2000) { artistDecades += "1990 " } else
-        if(date < d_2010) { artistDecades += "2000 " } else
-        if(date < d_2020) { artistDecades += "2010 " }
-        else { artistDecades += "2020" }
+        console.log(track.album.release_date);
+        date = new Date(track.album.release_date);
+
+        // if(date < d_1980) { artistDecades += "beighteens " } else
+        // if(date < d_1990) { artistDecades += "eighteens " } else
+        // if(date < d_2000) { artistDecades += "nineties " } else
+        // if(date < d_2010) { artistDecades += "twentyhundreds " } else
+        // if(date < d_2020) { artistDecades += "twentytens " }
+        // else { artistDecades += "2020 " }
+
+        if(date < d_2000) { artistDecades += "old ";
+        console.log(date); } 
+        else { artistDecades += "recent " }
       })
-      return artistDecades;
+      this.artistDecades = artistDecades;
     },
     getRandomInList(list) {
       let rand = Math.floor(Math.random()*50);
       //console.log(list);
       return list[rand];
     },
-    async getInListFilters(list, genre){
+    async getInListFilters(list, genre, decade){
+      this.artistDecades="";
+      console.log(this.artistDecades);
       let track = this.getRandomInList(list).track;
       //console.log(track);
       let artist = await this.getArtistFromId(track.artists[0].id);
@@ -101,6 +111,13 @@ export default {
       //let genres =['pop','rock','edm','rap']
       if(genre != "all"){
         if(!artist.genres.join().toLowerCase().includes(genre)){
+          return "exit";
+        }
+      }
+      if(decade != "all"){
+        await this.getArtistDecades(track.artists[0].id);
+        console.log(this.artistDecades);
+        if(!this.artistDecades.includes(decade)){
           return "exit";
         }
       }
@@ -121,14 +138,13 @@ export default {
         this.artistId = await this.getInListFilters(this.tracksList, this.genre, this.decade);
         cpt++;
         console.log(cpt);
-      }while(this.artistId == "exit" && cpt < 5);
-      if(cpt == 5){
+      }while(this.artistId == "exit" && cpt < 50);
+      if(cpt == 50){
         cpt = 0;
-
         if(this.playlistNb < this.playlist.length - 1){
           this.playlistNb ++;
           console.log("playlistNb update" + this.playlistNb);
-          this.play();
+          this.next();
         }
         else{
           alert('No more artists to guess');
@@ -158,7 +174,7 @@ export default {
       let userAnswer = payload.message.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
       if(this.artistName.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase() == userAnswer){
         this.setLastArtist();
-        this.play();
+        this.next();
         this.score ++;
       }
       this.updateSR();
@@ -166,7 +182,7 @@ export default {
     skipArtist(){
       this.attemptsNb ++;
       this.setLastArtist();
-      this.play();
+      this.next();
       this.updateSR();
     },
     updateSR(){
@@ -176,19 +192,46 @@ export default {
     },
     setGenreFilter(payload){
       this.genre = payload.message;
+
+      this.next();
       console.log(this.genre);
+    },
+    setDecadeFilter(payload){
+      this.decade = payload.message;
+      this.removeLastHistory();
+      this.next();
+      console.log(this.decade);
     },
     setLastArtist(){
       this.lastArtist = this.artistName;
       this.lastArtistPic = this.artistPic;
     },
-    async play(){
+    removeLastHistory(){
+      if(this.artistsHistory.length > 0){
+        this.artistsHistory = this.artistsHistory.slice(-1,-21);
+        // let cpt=this.artistsHistory.length - 1;
+        //           this.artistsHistory = this.artistsHistory.slice(0,-21);
+        // console.log('laaa: ', this.artistsHistory[cpt]);
+        // console.log('cpt: ', cpt);
+        // while(this.artistsHistory[cpt] != "/" && cpt > -1){
+        //   console.log('yooooooo');
+
+        //   console.log(this.artistsHistory);
+        //   cpt--;
+        // }
+      }
+    },
+    async next(){
       await this.getArtistId();
       //console.log(this.artistId);
       await this.getArtistInfos();
-      console.log(this.artistGenres);
-      console.log(this.artistName);
-      console.log('playlist nb : ' + this.playlistNb);
+    },
+    async play(){
+      this.artistsHistory = "";
+      await this.next();
+      // console.log(this.artistGenres);
+      // console.log(this.artistName);
+      // console.log('playlist nb : ' + this.playlistNb);
       }
   }
 }
@@ -202,7 +245,7 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: var(--text-primary-color);
-  margin-top: 60px;
+  margin-top: 1rem;
 }
 body{
   /* font-family: 'Inter', sans-serif; */
@@ -224,11 +267,11 @@ h1{
 #main{
   display: block;
   margin: auto;
-  width: 25vw;
+  width: 30vw;
 }
 @media screen and (max-width: 800px) {
   #main{
-    width: 65vw;
+    width: 75vw;
   }
 }
 </style>

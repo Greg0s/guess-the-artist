@@ -7,12 +7,8 @@
       class="switch-checkbox"
     />
     <label for="checkbox" class="switch-label">
-      <span id="dark">🌙</span>
-      <span id="light">☀️</span>
-      <div
-        class="switch-toggle"
-        
-      ></div>
+        <span id="dark">🌙</span>
+        <span id="light">☀️</span>
       </label>
   </div>
 </template>
@@ -72,17 +68,6 @@ export default {
 </script>
 
 <style>
-  .switch-toggle {
-  position: absolute;
-  /* background-color: var(--background-color-primary); */
-  border-radius: 50%;
-  top: calc(var(--element-size) * 0.07);
-  left: calc(var(--element-size) * 0.07);
-  height: calc(var(--element-size) * 0.4);
-  width: calc(var(--element-size) * 0.4);
-  transform: translateX(0);
-  transition: transform 0.3s ease, background-color 0.5s ease;
-}
 .switch-label {
   /* for width, use the standard element-size */
   width: calc(var(--element-size) * 0.4); 
@@ -98,7 +83,7 @@ export default {
   /* background: var(--text-primary-color); */
   cursor: pointer;
   display: flex;
-  position: relative;
+  position: absolute;
   transition: background 0.5s ease;
   justify-content: space-between;
   z-index: 1;

@@ -8,7 +8,7 @@
 export default {
   name: 'QuizCover', 
   props: {
-    imgSource : String,
+    imgSource : String
   }
 }
 </script>

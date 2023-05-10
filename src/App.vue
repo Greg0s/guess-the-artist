@@ -37,6 +37,7 @@ export default {
   }, 
   async created() {
     //await this.init();
+    document.title = 'Guess The Artist';
     this.artistsHistory = "";
     console.log(this.artistsHistory);
     await this.play();

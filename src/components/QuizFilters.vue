@@ -1,49 +1,68 @@
 <template>
     <div class="filters-container">
-        <div class="filters decade">
-            <span class="label">Genre: </span>
-            <label for="all">All</label>
-            <input type="radio" id="all" value="all" @change="check" v-model="checkedGenre">
+        <div class="filters">
+            <span class="label-text">Genre: </span>
+            <input type="radio" id="all-genre" value="all" @change="checkGenre" v-model="checkedGenre">
+            <label for="all-genre">All</label>
+            <input type="radio" id="pop" value="pop" @change="checkGenre" v-model="checkedGenre" >
             <label for="pop">Pop</label>
-            <input type="radio" id="pop" value="pop" @change="check" v-model="checkedGenre" >
+            <input type="radio" id="rock" value="rock" @change="checkGenre" v-model="checkedGenre" >
             <label for="rock">Rock</label>
-            <input type="radio" id="rock" value="rock" @change="check" v-model="checkedGenre" >
+            <input type="radio" id="rap" value="rap" @change="checkGenre" v-model="checkedGenre" >
             <label for="rap">Rap</label>
-            <input type="radio" id="rap" value="rap" @change="check" v-model="checkedGenre" >
+            <input type="radio" id="edm" value="edm" @change="checkGenre" v-model="checkedGenre" >
             <label for="edm">EDM</label>
-            <input type="radio" id="edm" value="edm" @change="check" v-model="checkedGenre" >
+        </div>
             <!-- <span class="label">Genre: </span>
             <span class="filter twentytens">All</span>
             <span class="filter nineties">Pop</span>
             <span class="filter twentyhundreds">Rock</span>
             <span class="filter twentytens">Rap</span>
             <span class="filter twentytens">EDM</span> -->
+        <div class="filters">
+            <span class="label-text">Period: </span>
+            <input type="radio" id="all-decade" value="all" @change="checkDecade" v-model="checkedDecade">
+            <label for="all-decade">All</label>
+            <input type="radio" id="old" value="old" @change="checkDecade" v-model="checkedDecade" >
+            <label for="old">Old</label>
+            <input type="radio" id="recent" value="recent" @change="checkDecade" v-model="checkedDecade" >
+            <label for="recent">Recent</label>
+            <!-- <input type="radio" id="beighteens" value="beighteens" @change="checkDecade" v-model="checkedDecade" >
+            <label for="beighteens">Old</label>
+            <input type="radio" id="eighteens" value="eighteens" @change="checkDecade" v-model="checkedDecade" >
+            <label for="eighteens">1980s</label>
+            <input type="radio" id="nineties" value="nineties" @change="checkDecade" v-model="checkedDecade" >
+            <label for="nineties">1990s</label>
+            <input type="radio" id="twentyhundreds" value="twentyhundreds" @change="checkDecade" v-model="checkedDecade" >
+            <label for="twentyhundreds">2000s</label>
+            <input type="radio" id="twentytens" value="twentytens" @change="checkDecade" v-model="checkedDecade" >
+            <label for="twentytens">2010s</label>
+            <input type="radio" id="recent" value="recent" @change="checkDecade" v-model="checkedDecade" >
+            <label for="recent">Recent</label> -->
         </div>
-        <!-- <div class="filters decade">
-            <span class="label">Decade: </span>
-            <span class="filter nineties">1990s</span>
-            <span class="filter twentyhundreds">2000s</span>
-            <span class="filter twentytens">2010s</span>
-        </div> -->
     </div>
 </template>
 
 <script>
 export default{
     name: 'QuizFilters',
-    emits : ["checkedGenre"],
+    emits : ["checkedGenre", "checkedDecade"],
     data() {
         return {
-            checkedGenre: "all"
+            checkedGenre: "all",
+            checkedDecade: "all"
         }
     },
     async created() {
 
     },
     methods: {
-        check(){
+        checkGenre(){
             console.log(this.checkedGenre);
             this.$emit('checkedGenre', { message : this.checkedGenre });
+        },
+        checkDecade(){
+            this.$emit('checkedDecade', { message : this.checkedDecade });
         }
     }
 }
@@ -54,9 +73,28 @@ export default{
         display: flex;
         align-items: center;
         justify-content: center;
+        /* background-color: var(--accent-color);
+        border-radius: 15px; */
     }
-    .filter{
-        background-color: violet;
-        margin: 0.5em;
+    input{
+        display: none;
+    }
+    label{
+        padding: calc(var(--element-size) * 0.1);
+        font-size: calc(var(--element-size) * 0.3);
+        height: calc(var(--element-size) * 0.35);
+        cursor: pointer;
+        z-index: 1;
+
+    }
+    input[type="radio"]:checked+label{
+        border-radius: 15px ;
+        background-color: var(--accent-color);
+    }
+    .label-text{
+        font-family: 'Judson', 'serif';
+        font-size: 1.2rem;
+        font-weight: 700;
+        margin-right: 0.5rem;
     }
 </style>

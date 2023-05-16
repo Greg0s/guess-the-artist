@@ -173,7 +173,7 @@ export default {
       //console.log(this.artistName);
       this.attemptsNb ++;
       let userAnswer = payload.message.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-      if(this.artistName.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase() == userAnswer){
+      if(this.artistName.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase() == userAnswer.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase()){
         this.setLastArtist();
         this.next();
         this.score ++;

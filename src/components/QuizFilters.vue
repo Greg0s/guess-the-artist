@@ -97,4 +97,9 @@ export default{
         font-weight: 700;
         margin-right: 0.5rem;
     }
+
+    input[type="radio"]+label:hover{
+        background-color: rgba(255, 255, 255, 0.4);
+        border-radius: 15px;
+    }
 </style>

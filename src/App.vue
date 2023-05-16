@@ -39,6 +39,7 @@ export default {
     //await this.init();
     document.title = 'Guess The Artist';
     this.artistsHistory = "";
+    this.database = await spotify.createDatabase();
     await this.play();
   },
   data() {
@@ -64,57 +65,6 @@ export default {
     }
   },
   methods :{
-    async getDataset(){
-      console.log(this.playlist[this.playlistNb]);
-      const data = await spotify.getSongs(this.playlist[this.playlistNb]);
-      //console.log(data);
-      return data.items;  
-    },
-    async createDatabase(){
-      let list = await this.getDataset();
-      console.log(list);
-      let database = [];
-      let id, name, genre, period, img, artist, artistInfos;
-      for(let i = 0 ; i < 50 ; i ++){
-        id = list[i].track.artists[0].id;
-        artistInfos = await this.getArtistInfos(id);
-
-        name = list[i].track.artists[0].name;
-        genre = artistInfos[0];
-        period = await this.getArtistDecades(id);
-        img = artistInfos[1];
-        artist = [id, name, genre, period, img];
-        database.push(artist);
-      }
-      this.database = JSON.stringify(Object.assign({}, database))
-    },
-    async getArtistDecades(artistId){
-      let topSongs = await spotify.getTopSongsArtist(artistId);
-      let artistDecades ="";
-      // let d_1980 = new Date("1980-01-01");
-      // let d_1990 = new Date("1990-01-01");
-      let d_2000 = new Date("2000-01-01");
-      // let d_2010 = new Date("2010-01-01");
-      // let d_2020 = new Date("2020-01-01");
-      let date;
-      topSongs.tracks.forEach(track => {
-       // console.log(track.album.release_date);
-        date = new Date(track.album.release_date);
-
-        // if(date < d_1980) { artistDecades += "beighteens " } else
-        // if(date < d_1990) { artistDecades += "eighteens " } else
-        // if(date < d_2000) { artistDecades += "nineties " } else
-        // if(date < d_2010) { artistDecades += "twentyhundreds " } else
-        // if(date < d_2020) { artistDecades += "twentytens " }
-        // else { artistDecades += "2020 " }
-
-        if(date < d_2000) { artistDecades += "old ";
-        //console.log(date); 
-      } 
-        else { artistDecades += "recent " }
-      })
-      return artistDecades;
-    },
     getRandomInList(list) {
       let rand = Math.floor(Math.random()*50);
       //console.log(list);
@@ -176,18 +126,6 @@ export default {
     async getTracksList(){
       this.tracksList = await this.getDataset();
     },
-    async getArtistInfos(id){
-        let artistInfos = [];
-        let artist = await spotify.getArtist(id);
-        if(artist.genres){
-          artistInfos.push(artist.genres.join());
-        }else{
-          artistInfos.push("");
-        }
-        artistInfos.push(artist.images[0].url);
-
-        return artistInfos;
-    },
     async getArtistFromId(id){
       return this.artist = await spotify.getArtist(id);
     },
@@ -232,23 +170,11 @@ export default {
     removeLastHistory(){
       if(this.artistsHistory.length > 0){
         this.artistsHistory = this.artistsHistory.slice(-1,-21);
-        // let cpt=this.artistsHistory.length - 1;
-        //           this.artistsHistory = this.artistsHistory.slice(0,-21);
-        // console.log('laaa: ', this.artistsHistory[cpt]);
-        // console.log('cpt: ', cpt);
-        // while(this.artistsHistory[cpt] != "/" && cpt > -1){
-        //   console.log('yooooooo');
-
-        //   console.log(this.artistsHistory);
-        //   cpt--;
-        // }
       }
     },
     async next(){
-      await this.createDatabase();
+      this.database = await spotify.createDatabase();
       console.log(this.database);
-      //await this.getArtistId();
-      //await this.getArtistInfos();
     },
     async play(){
       this.artistsHistory = "";

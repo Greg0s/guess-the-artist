@@ -39,7 +39,6 @@ export default {
     //await this.init();
     document.title = 'Guess The Artist';
     this.artistsHistory = "";
-    console.log(this.artistsHistory);
     await this.play();
   },
   data() {
@@ -53,7 +52,6 @@ export default {
       score : 0,
       successRate : 0,
       attemptsNb : 0,
-      tracksList : "",
       genre:"all",
       decade: "all",
       artistsHistory: "",
@@ -61,7 +59,8 @@ export default {
       lastArtistPic : "",
       userTheme: "light-theme",
       playlist: ['0XXN2jKGfxhnAxzosyjJbd','1ISSOeZLHpzuOJ0CdSYwgD', '37i9dQZF1DWTIfBdh7WtFL'],
-      playlistNb: 0
+      playlistNb: 0,
+      database : ""
     }
   },
   methods :{
@@ -69,7 +68,25 @@ export default {
       console.log(this.playlist[this.playlistNb]);
       const data = await spotify.getSongs(this.playlist[this.playlistNb]);
       //console.log(data);
-      return data.items;
+      return data.items;  
+    },
+    async createDatabase(){
+      let list = await this.getDataset();
+      console.log(list);
+      let database = [];
+      let id, name, genre, period, img, artist, artistInfos;
+      for(let i = 0 ; i < 50 ; i ++){
+        id = list[i].track.artists[0].id;
+        artistInfos = await this.getArtistInfos(id);
+
+        name = list[i].track.artists[0].name;
+        genre = artistInfos[0];
+        period = await this.getArtistDecades(id);
+        img = artistInfos[1];
+        artist = [id, name, genre, period, img];
+        database.push(artist);
+      }
+      this.database = JSON.stringify(Object.assign({}, database))
     },
     async getArtistDecades(artistId){
       let topSongs = await spotify.getTopSongsArtist(artistId);
@@ -81,7 +98,7 @@ export default {
       // let d_2020 = new Date("2020-01-01");
       let date;
       topSongs.tracks.forEach(track => {
-        console.log(track.album.release_date);
+       // console.log(track.album.release_date);
         date = new Date(track.album.release_date);
 
         // if(date < d_1980) { artistDecades += "beighteens " } else
@@ -92,10 +109,11 @@ export default {
         // else { artistDecades += "2020 " }
 
         if(date < d_2000) { artistDecades += "old ";
-        console.log(date); } 
+        //console.log(date); 
+      } 
         else { artistDecades += "recent " }
       })
-      this.artistDecades = artistDecades;
+      return artistDecades;
     },
     getRandomInList(list) {
       let rand = Math.floor(Math.random()*50);
@@ -158,13 +176,17 @@ export default {
     async getTracksList(){
       this.tracksList = await this.getDataset();
     },
-    async getArtistInfos(){
-        this.artist = await spotify.getArtist(this.artistId);
-        ////console.log(this.artist);
-        this.artistPic = this.artist.images[0].url;
-        this.artistName = this.artist.name;
-        //console.log(this.artist);
-        this.artistGenres = this.artist.genres.join();
+    async getArtistInfos(id){
+        let artistInfos = [];
+        let artist = await spotify.getArtist(id);
+        if(artist.genres){
+          artistInfos.push(artist.genres.join());
+        }else{
+          artistInfos.push("");
+        }
+        artistInfos.push(artist.images[0].url);
+
+        return artistInfos;
     },
     async getArtistFromId(id){
       return this.artist = await spotify.getArtist(id);
@@ -195,13 +217,13 @@ export default {
       this.genre = payload.message;
 
       this.next();
-      console.log(this.genre);
+      //console.log(this.genre);
     },
     setDecadeFilter(payload){
       this.decade = payload.message;
       this.removeLastHistory();
       this.next();
-      console.log(this.decade);
+      //console.log(this.decade);
     },
     setLastArtist(){
       this.lastArtist = this.artistName;
@@ -223,16 +245,14 @@ export default {
       }
     },
     async next(){
-      await this.getArtistId();
-      //console.log(this.artistId);
-      await this.getArtistInfos();
+      await this.createDatabase();
+      console.log(this.database);
+      //await this.getArtistId();
+      //await this.getArtistInfos();
     },
     async play(){
       this.artistsHistory = "";
       await this.next();
-      // console.log(this.artistGenres);
-      // console.log(this.artistName);
-      // console.log('playlist nb : ' + this.playlistNb);
       }
   }
 }

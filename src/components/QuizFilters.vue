@@ -13,32 +13,14 @@
             <input type="radio" id="edm" value="edm" @change="checkGenre" v-model="checkedGenre" >
             <label for="edm">EDM</label>
         </div>
-            <!-- <span class="label">Genre: </span>
-            <span class="filter twentytens">All</span>
-            <span class="filter nineties">Pop</span>
-            <span class="filter twentyhundreds">Rock</span>
-            <span class="filter twentytens">Rap</span>
-            <span class="filter twentytens">EDM</span> -->
         <div class="filters">
             <span class="label-text">Period: </span>
-            <input type="radio" id="all-decade" value="all" @change="checkDecade" v-model="checkedDecade">
-            <label for="all-decade">All</label>
-            <input type="radio" id="old" value="old" @change="checkDecade" v-model="checkedDecade" >
+            <input type="radio" id="all-period" value="all" @change="checkPeriod" v-model="checkedPeriod">
+            <label for="all-period">All</label>
+            <input type="radio" id="old" value="old" @change="checkPeriod" v-model="checkedPeriod" >
             <label for="old">Old</label>
-            <input type="radio" id="recent" value="recent" @change="checkDecade" v-model="checkedDecade" >
+            <input type="radio" id="recent" value="recent" @change="checkPeriod" v-model="checkedPeriod" >
             <label for="recent">Recent</label>
-            <!-- <input type="radio" id="beighteens" value="beighteens" @change="checkDecade" v-model="checkedDecade" >
-            <label for="beighteens">Old</label>
-            <input type="radio" id="eighteens" value="eighteens" @change="checkDecade" v-model="checkedDecade" >
-            <label for="eighteens">1980s</label>
-            <input type="radio" id="nineties" value="nineties" @change="checkDecade" v-model="checkedDecade" >
-            <label for="nineties">1990s</label>
-            <input type="radio" id="twentyhundreds" value="twentyhundreds" @change="checkDecade" v-model="checkedDecade" >
-            <label for="twentyhundreds">2000s</label>
-            <input type="radio" id="twentytens" value="twentytens" @change="checkDecade" v-model="checkedDecade" >
-            <label for="twentytens">2010s</label>
-            <input type="radio" id="recent" value="recent" @change="checkDecade" v-model="checkedDecade" >
-            <label for="recent">Recent</label> -->
         </div>
     </div>
 </template>
@@ -46,11 +28,11 @@
 <script>
 export default{
     name: 'QuizFilters',
-    emits : ["checkedGenre", "checkedDecade"],
+    emits : ["checkedGenre", "checkedPeriod"],
     data() {
         return {
             checkedGenre: "all",
-            checkedDecade: "all"
+            checkedPeriod: "all"
         }
     },
     async created() {
@@ -61,8 +43,8 @@ export default{
             console.log(this.checkedGenre);
             this.$emit('checkedGenre', { message : this.checkedGenre });
         },
-        checkDecade(){
-            this.$emit('checkedDecade', { message : this.checkedDecade });
+        checkPeriod(){
+            this.$emit('checkedPeriod', { message : this.checkedPeriod });
         }
     }
 }

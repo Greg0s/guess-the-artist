@@ -23,7 +23,7 @@ let spotify = {
     },
     async getSongs(playlist){   
         if(bearerSpotify == ""){await newToken()}
-        let res = await fetch('https://api.spotify.com/v1/playlists/' + playlist + '/tracks', {
+        let res = await fetch('https://api.spotify.com/v1/playlists/' + playlist + '/tracks?limit=20', {
             method: "GET",
             headers: {
                 "Authorization" : "Bearer " + bearerSpotify
@@ -91,20 +91,20 @@ let spotify = {
     },
     async createDatabase(){
         let list = await this.getDataset();
-        console.log(list);
         let database = [];
-        let id, name, genre, period, img, artist, artistInfos;
-        for(let i = 0 ; i < 50 ; i ++){
+        let id, name, genres, period, img, artist, artistInfos;
+        for(let i = 0 ; i < list.length ; i ++){
           id = list[i].track.artists[0].id;
           name = list[i].track.artists[0].name;
           period = await this.getArtistDecades(id);
           artistInfos = await this.getArtistInfos(id);
-          genre = artistInfos[0];
+          genres = artistInfos[0];
           img = artistInfos[1];
-          artist = [id, name, period, genre, img];
+          artist = {id: id, name: name, period: period, genres: genres, img: img};
           database.push(artist);
         }
-        return database = JSON.stringify(Object.assign({}, database))
+        database = shuffle(database);
+        return database = JSON.stringify(database)
       }
 }
 
@@ -113,5 +113,22 @@ async function newToken(){
     bearerSpotify = bearerSpotify.access_token;
 }
 setInterval(newToken(), 1000 * 60 * 60);
+
+function shuffle(array) {
+    let currentIndex = array.length,  randomIndex;
+  
+    // While there remain elements to shuffle.
+    while (currentIndex != 0) {
+  
+      // Pick a remaining element.
+      randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex--;
+  
+      // And swap it with the current element.
+      [array[currentIndex], array[randomIndex]] = [
+        array[randomIndex], array[currentIndex]];
+    }
+    return array;
+}
 
 export default spotify;

@@ -6,12 +6,12 @@
   <UIColorMode></UIColorMode>
   <h1 class="title">Guess The Artist</h1>
   <div id="main">
-    <QuizFilters @checkedGenre="setGenreFilter" @checkedDecade="setDecadeFilter" />
+    <QuizFilters @checkedGenre="setGenreFilter" @checkedPeriod="setPeriodFilter" />
       <div class="topBox">
         <QuizScore :gameScore="score" :total="attemptsNb" :gameSR="successRate" />
-        <QuizHistory class="history" :lastArtistName="lastArtist" :imgSource="lastArtistPic"/>
+        <QuizHistory class="history" :lastArtistName="lastArtist" :imgSource="lastArtistImg"/>
       </div>
-      <QuizCover :imgSource="artistPic"/>
+      <QuizCover :imgSource="artistImg"/>
     <QuizAnswerField @attempt="checkAnswer" @skip="skipArtist" />
   </div>
 </template>
@@ -36,101 +36,40 @@ export default {
     UIColorMode
   }, 
   async created() {
-    //await this.init();
     document.title = 'Guess The Artist';
-    this.artistsHistory = "";
     this.database = await spotify.createDatabase();
-    await this.play();
+    this.database = JSON.parse(this.database);
+    this.currentDatabase = this.database;
+    console.log(this.database);
+    this.play();
   },
   data() {
     return { 
-      artistId  : "",
-      artist    : "",
-      artistPic : "",
+      artistId : "",
       artistName : "",
+      artistPeriod : "",
       artistGenres :"",
-      artistDecades : "",
+      artistImg : "",
+
       score : 0,
       successRate : 0,
       attemptsNb : 0,
+
       genre:"all",
-      decade: "all",
-      artistsHistory: "",
+      period: "all",
+
       lastArtist : "",
-      lastArtistPic : "",
+      lastArtistImg : "",
+
       userTheme: "light-theme",
-      playlist: ['0XXN2jKGfxhnAxzosyjJbd','1ISSOeZLHpzuOJ0CdSYwgD', '37i9dQZF1DWTIfBdh7WtFL'],
-      playlistNb: 0,
-      database : ""
+
+      database : "",
+      currentDatabase : "",
+      cpt: 0
     }
   },
   methods :{
-    getRandomInList(list) {
-      let rand = Math.floor(Math.random()*50);
-      //console.log(list);
-      return list[rand];
-    },
-    async getInListFilters(list, genre, decade){
-      this.artistDecades="";
-      console.log(this.artistDecades);
-      let track = this.getRandomInList(list).track;
-      //console.log(track);
-      let artist = await this.getArtistFromId(track.artists[0].id);
-      console.log(artist);
-      //let genres =['pop','rock','edm','rap']
-      if(genre != "all"){
-        if(!artist.genres.join().toLowerCase().includes(genre)){
-          return "exit";
-        }
-      }
-      if(decade != "all"){
-        await this.getArtistDecades(track.artists[0].id);
-        console.log(this.artistDecades);
-        if(!this.artistDecades.includes(decade)){
-          return "exit";
-        }
-      }
-      if(this.artistsHistory.includes(track.artists[0].id)){
-        console.log('artiste deja passé');
-        return "exit";
-      }else{
-        this.artistsHistory += track.artists[0].id + " ";
-        console.log(this.artistsHistory);
-        return track.artists[0].id;
-      }
-
-    },
-    async getArtistId(){
-      await this.getTracksList();
-      let cpt = 0;
-      do{
-        this.artistId = await this.getInListFilters(this.tracksList, this.genre, this.decade);
-        cpt++;
-        console.log(cpt);
-      }while(this.artistId == "exit" && cpt < 50);
-      if(cpt == 50){
-        cpt = 0;
-        if(this.playlistNb < this.playlist.length - 1){
-          this.playlistNb ++;
-          console.log("playlistNb update" + this.playlistNb);
-          this.next();
-        }
-        else{
-          alert('No more artists to guess');
-          this.artistsHistory = "";
-          this.playlistNb = 0;
-        }
-      }
-      //this.artistId = this.getRandomInList(this.tracksList).track.artists[0].id;
-    },
-    async getTracksList(){
-      this.tracksList = await this.getDataset();
-    },
-    async getArtistFromId(id){
-      return this.artist = await spotify.getArtist(id);
-    },
     checkAnswer(payload){
-      //console.log(this.artistName);
       this.attemptsNb ++;
       let userAnswer = payload.message.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
       if(this.artistName.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase() == userAnswer.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase()){
@@ -140,46 +79,82 @@ export default {
       }
       this.updateSR();
     },
+    // Skip button
     skipArtist(){
       this.attemptsNb ++;
       this.setLastArtist();
       this.next();
       this.updateSR();
     },
+    // Score rate
     updateSR(){
       if(this.attemptsNb > 0){
         this.successRate = Math.floor(this.score*100/this.attemptsNb);
       }
     },
+    // Filters
     setGenreFilter(payload){
+      // set new genre
       this.genre = payload.message;
-
+      // update current database according to the filter
+      let newDatabase = [];
+      this.cpt = 0;
+      this.database.forEach(artist => {
+        if(artist.genres.includes(this.genre)){
+          newDatabase.push(artist);
+        }
+      });
+      this.currentDatabase = newDatabase;
+      // change artist to match the filter
       this.next();
-      //console.log(this.genre);
     },
-    setDecadeFilter(payload){
-      this.decade = payload.message;
-      this.removeLastHistory();
+    setPeriodFilter(payload){
+      this.period = payload.message;
+      // update current database according to the filter
+      let newDatabase = [];
+      this.cpt = 0;
+      this.database.forEach(artist => {
+        if(artist.period.includes(this.period)){
+          newDatabase.push(artist);
+        }
+      });
+      this.currentDatabase = newDatabase;
+      // change artist to match the filter
       this.next();
-      //console.log(this.decade);
     },
+    // Last artist
     setLastArtist(){
       this.lastArtist = this.artistName;
-      this.lastArtistPic = this.artistPic;
+      this.lastArtistImg = this.artistImg;
     },
-    removeLastHistory(){
-      if(this.artistsHistory.length > 0){
-        this.artistsHistory = this.artistsHistory.slice(-1,-21);
-      }
+    initCurrentDatabase(){
+      this.currentDatabase = this.database;
+      this.cpt = 0;
     },
-    async next(){
-      this.database = await spotify.createDatabase();
-      console.log(this.database);
+    cleanCurrentDb(){
+      this.currentDatabase = this.currentDatabase.filter(function (artist) {
+        return artist != null;
+      });
     },
-    async play(){
-      this.artistsHistory = "";
-      await this.next();
-      }
+    // Game
+    setArtistInfos(){
+      this.artistId = this.currentDatabase[this.cpt]["id"];
+      this.artistName = this.currentDatabase[this.cpt]["name"];
+      console.log(this.artistName);
+      this.artistPeriod = this.currentDatabase[this.cpt]["period"];
+      this.artistGenres = this.currentDatabase[this.cpt]["genres"];
+      console.log(this.artistGenres);
+      this.artistImg = this.currentDatabase[this.cpt]["img"];
+    },
+    next(){
+      delete this.currentDatabase[this.cpt];
+      this.cleanCurrentDb();
+      this.cpt++;
+      this.setArtistInfos();
+    },
+    play(){
+      this.setArtistInfos();
+    }
   }
 }
 

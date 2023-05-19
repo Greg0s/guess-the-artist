@@ -6,7 +6,7 @@
   <UIColorMode></UIColorMode>
   <h1 class="title">Guess The Artist</h1>
   <div id="main">
-    <QuizFilters @checkedGenre="setGenreFilter" @checkedPeriod="setPeriodFilter" />
+    <QuizFilters @checkedGenre="getGenreFilter" @checkedPeriod="getPeriodFilter" />
       <div class="topBox">
         <QuizScore :gameScore="score" :total="attemptsNb" :gameSR="successRate" />
         <QuizHistory class="history" :lastArtistName="lastArtist" :imgSource="lastArtistImg"/>
@@ -37,9 +37,7 @@ export default {
   }, 
   async created() {
     document.title = 'Guess The Artist';
-    this.database = await spotify.createDatabase();
-    this.database = JSON.parse(this.database);
-    this.currentDatabase = this.database;
+    await this.createDatabase();
     console.log(this.database);
     this.play();
   },
@@ -69,21 +67,33 @@ export default {
     }
   },
   methods :{
-    checkAnswer(payload){
+    //for debugging
+    printDb(){
+      let text = "currentdb = ";
+      let cpt = 0;
+      this.currentDatabase.forEach(artist => {
+        text += artist['name'];
+        cpt++;
+      });
+      console.log(text);
+      console.log("cpt = ", cpt);
+    },
+    // Check user answer
+    async checkAnswer(payload){
       this.attemptsNb ++;
       let userAnswer = payload.message.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
       if(this.artistName.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase() == userAnswer.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase()){
         this.setLastArtist();
-        this.next();
+        await this.next();
         this.score ++;
       }
       this.updateSR();
     },
     // Skip button
-    skipArtist(){
+    async skipArtist(){
       this.attemptsNb ++;
       this.setLastArtist();
-      this.next();
+      await this.next();
       this.updateSR();
     },
     // Score rate
@@ -93,72 +103,117 @@ export default {
       }
     },
     // Filters
-    setGenreFilter(payload){
+    async getGenreFilter(payload){
       // set new genre
       this.genre = payload.message;
-      if(this.genre != 'all'){
-        // update current database according to the filter
-        let newDatabase = [];
-        this.cpt = 0;
-        this.database.forEach(artist => {
-          if(artist.genres.includes(this.genre)){
-            newDatabase.push(artist);
-          }
-        });
-        this.currentDatabase = newDatabase;
-      }else{ // remove filter
-        this.initCurrentDatabase();
-      }
-      // change artist to match the filter
-      this.next();
+      await this.setFilter();
     },
-    setPeriodFilter(payload){
+    async getPeriodFilter(payload){
+      //set new period
       this.period = payload.message;
+      await this.setFilter();
+    },
+    async setFilter(){
+      this.currentDatabase = this.merged(this.dbGenreFilter(), this.dbPeriodFilter());
+      await this.next();
+    },
+    dbPeriodFilter(){
       if(this.period != 'all'){
-        // update current database according to the filter
+        // filter database according to the filter
         let newDatabase = [];
-        this.cpt = 0;
         this.database.forEach(artist => {
           if(artist.period.includes(this.period)){
             newDatabase.push(artist);
           }
         });
-        this.currentDatabase = newDatabase;
-        // change artist to match the filter
+        return newDatabase;
       }else{ // remove filter
-        this.initCurrentDatabase();
+        return this.database;
       }
-      this.next();
+    },
+    dbGenreFilter(){
+      if(this.genre != 'all'){
+        // filter database according to the filter
+        let newDatabase = [];
+        this.database.forEach(artist => {
+          if(artist.genres.includes(this.genre)){
+            newDatabase.push(artist);
+          }
+        });
+        return newDatabase;
+      }else{ // remove filter
+        return this.database;
+      }
+    },
+    merged(db1, db2){
+      //let merged = {...db1, ...db2};
+      let merged = [];
+      db1.forEach(artist => {
+        if(this.dbIncludes(db2, artist)){
+          merged.push(artist);
+        }
+      });
+      if(merged.length != 0){
+        return merged;
+      }else{// if merge empty
+        // TO-DO: set filters to all here
+        document.getElementById(this.genre).checked = false;
+        document.getElementById(this.period).checked = false;
+        this.genre = 'all';
+        this.period = 'all';
+        document.getElementById("all-genre").checked = true;
+        document.getElementById("all-period").checked = true;
+        return this.database;
+      }
+    },
+    dbIncludes(db, artist){
+      let includes = false;
+      db.forEach(db_artist => {
+        if(db_artist['name'].toString() === artist['name'].toString()){
+          includes = true;
+        }
+      });
+      return includes;
     },
     // Last artist
     setLastArtist(){
       this.lastArtist = this.artistName;
       this.lastArtistImg = this.artistImg;
     },
+    // Database management
+    async createDatabase(){
+      this.database = await spotify.createDatabase();
+      this.database = JSON.parse(this.database);
+      this.currentDatabase = this.database;
+    },
     initCurrentDatabase(){
       this.currentDatabase = this.database;
-      this.cpt = 0;
     },
     cleanCurrentDb(){
+      //clear null elements
       this.currentDatabase = this.currentDatabase.filter(function (artist) {
         return artist != null;
       });
     },
     // Game
     setArtistInfos(){
-      this.artistId = this.currentDatabase[this.cpt]["id"];
-      this.artistName = this.currentDatabase[this.cpt]["name"];
+      this.artistId = this.currentDatabase[0]["id"];
+      this.artistName = this.currentDatabase[0]["name"];
       console.log(this.artistName);
-      this.artistPeriod = this.currentDatabase[this.cpt]["period"];
-      this.artistGenres = this.currentDatabase[this.cpt]["genres"];
+      this.artistPeriod = this.currentDatabase[0]["period"];
+      this.artistGenres = this.currentDatabase[0]["genres"];
       console.log(this.artistGenres);
-      this.artistImg = this.currentDatabase[this.cpt]["img"];
+      this.artistImg = this.currentDatabase[0]["img"];
     },
-    next(){
-      delete this.currentDatabase[this.cpt];
+    async next(){
+      delete this.currentDatabase[0];
       this.cleanCurrentDb();
-      this.cpt++;
+      if(this.currentDatabase.length == 0){
+        await this.createDatabase();
+        await this.setFilter();
+      }
       this.setArtistInfos();
+      this.printDb();
     },
     play(){
       this.setArtistInfos();

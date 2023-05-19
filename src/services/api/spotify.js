@@ -1,7 +1,7 @@
 import { idSpotify } from './apiKey.js';
 let bearerSpotify = "";
 
-let playlist = ['0XXN2jKGfxhnAxzosyjJbd','1ISSOeZLHpzuOJ0CdSYwgD', '37i9dQZF1DWTIfBdh7WtFL'];
+let playlist = ['0XXN2jKGfxhnAxzosyjJbd','7oBeEkujcRybm7dCAUAIhG', '68BOljqWA5DyNsTXE5qbXr', '0g5bk8atjp6cIeN5WbS4B9', '230z2ul4DpViQvSdHwkuQr'];
 let playlistNb = 0;
 
 //const playlist = '1ISSOeZLHpzuOJ0CdSYwgD'
@@ -87,6 +87,7 @@ let spotify = {
     },
     async getDataset(){
         const data = await spotify.getSongs(playlist[playlistNb]);
+        playlistNb ++;
         return data.items;  
     },
     async createDatabase(){

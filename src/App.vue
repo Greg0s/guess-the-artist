@@ -96,30 +96,38 @@ export default {
     setGenreFilter(payload){
       // set new genre
       this.genre = payload.message;
-      // update current database according to the filter
-      let newDatabase = [];
-      this.cpt = 0;
-      this.database.forEach(artist => {
-        if(artist.genres.includes(this.genre)){
-          newDatabase.push(artist);
-        }
-      });
-      this.currentDatabase = newDatabase;
+      if(this.genre != 'all'){
+        // update current database according to the filter
+        let newDatabase = [];
+        this.cpt = 0;
+        this.database.forEach(artist => {
+          if(artist.genres.includes(this.genre)){
+            newDatabase.push(artist);
+          }
+        });
+        this.currentDatabase = newDatabase;
+      }else{ // remove filter
+        this.initCurrentDatabase();
+      }
       // change artist to match the filter
       this.next();
     },
     setPeriodFilter(payload){
       this.period = payload.message;
-      // update current database according to the filter
-      let newDatabase = [];
-      this.cpt = 0;
-      this.database.forEach(artist => {
-        if(artist.period.includes(this.period)){
-          newDatabase.push(artist);
-        }
-      });
-      this.currentDatabase = newDatabase;
-      // change artist to match the filter
+      if(this.period != 'all'){
+        // update current database according to the filter
+        let newDatabase = [];
+        this.cpt = 0;
+        this.database.forEach(artist => {
+          if(artist.period.includes(this.period)){
+            newDatabase.push(artist);
+          }
+        });
+        this.currentDatabase = newDatabase;
+        // change artist to match the filter
+      }else{ // remove filter
+        this.initCurrentDatabase();
+      }
       this.next();
     },
     // Last artist

@@ -57,14 +57,18 @@
     border-radius: 25px;
     padding: 1rem;
     background-color: var(--accent-color);
-    width: 55%;
-    height: 100%;
   }
   .last-artist h3{
     margin: 0 0 1rem 0;
   }
   #name{
     font-size: 1.2rem;
+  }
+
+  @media screen and (max-width: 1000px) {
+    .last-artist{
+      width: 55%;
+    }
   }
 
 </style>

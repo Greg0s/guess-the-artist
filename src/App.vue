@@ -4,16 +4,36 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Judson:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
 
   <UIColorMode></UIColorMode>
-  <h1 class="title">Guess The Artist</h1>
-  <div id="main">
+
+  <!--~~~~~~~~~~~~~~~~~~Desktop >= 800px~~~~~~~~~~~~~~~~~~~~-->
+  <div v-if="windowWidth > 1000" class="main">
+    <div class="coverBox">
+      <QuizCover :imgSource="artistImg"/>
+    </div>
+    <div class="sideBox">
+      <h1 class="title">Guess The Artist</h1>
+      <QuizFilters @checkedGenre="getGenreFilter" @checkedPeriod="getPeriodFilter" />
+      <QuizScore :gameScore="score" :total="attemptsNb" :gameSR="successRate" />
+      <QuizHistory class="history" :lastArtistName="lastArtist" :imgSource="lastArtistImg"/>
+      <QuizAnswerField @attempt="checkAnswer" @skip="skipArtist" />
+    </div>
+  </div>
+  <!--~~~~~~~~~~~~~~~~~~Mobile < 800px~~~~~~~~~~~~~~~~~~~~-->
+  <div v-else class="main">
+    <h1 class="title">Guess The Artist</h1>
     <QuizFilters @checkedGenre="getGenreFilter" @checkedPeriod="getPeriodFilter" />
+    <div class="gameContainer">
       <div class="topBox">
         <QuizScore :gameScore="score" :total="attemptsNb" :gameSR="successRate" />
         <QuizHistory class="history" :lastArtistName="lastArtist" :imgSource="lastArtistImg"/>
       </div>
-      <QuizCover :imgSource="artistImg"/>
-    <QuizAnswerField @attempt="checkAnswer" @skip="skipArtist" />
+      <div class="coverBox">
+        <QuizCover :imgSource="artistImg"/>
+        <QuizAnswerField @attempt="checkAnswer" @skip="skipArtist" />
+      </div>
+    </div>
   </div>
+
 </template>
 
 <script>
@@ -43,6 +63,7 @@ export default {
   },
   data() {
     return { 
+      windowWidth: window.innerWidth,
       artistId : "",
       artistName : "",
       artistPeriod : "",
@@ -67,6 +88,9 @@ export default {
     }
   },
   methods :{
+    handleWindowResize() {
+      this.windowWidth = window.innerWidth;
+    },
     //for debugging
     printDb(){
       let text = "currentdb = ";
@@ -218,45 +242,86 @@ export default {
     play(){
       this.setArtistInfos();
     }
-  }
+  },
+  mounted() {
+    window.addEventListener('resize', this.handleWindowResize);
+  },
+  beforeUnmount() {
+    window.removeEventListener('resize', this.handleWindowResize);
+  },
 }
 
 </script>
 
 <style>
 
-#app {
+/*~~~~~~~~~~~~~~~~GENERAL~~~~~~~~~~~~~~~~*/
+
+:root{
+  background-color: var(--background-color-primary);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: var(--text-primary-color);
-  margin-top: 1rem;
-}
-body{
-  /* font-family: 'Inter', sans-serif; */
   font-family: 'Judson', serif;
+  /* font-family: 'Inter', sans-serif; */
 }
+
+body{
+  padding: 0;
+  margin: 0;
+}
+
 h1{
   font-family: 'Judson', serif;
 }
-.topBox{
-  display: flex;
-  margin: auto;
-  align-items: center;
-  justify-content: space-between;
-  margin: 1rem 0 1rem 0;
-}
-:root{
-  background-color: var(--background-color-primary);
-}
+
 #main{
   display: block;
   margin: auto;
-  width: 30vw;
 }
-@media screen and (max-width: 800px) {
-  #main{
-    width: 75vw;
+
+@media screen and (min-width: 1001px) {
+  .main{
+    display: flex;
+    gap: 3rem;
+  }
+  .coverBox{
+    display: block;
+    width: 50vw;
+    height: 100vh;
+    overflow: hidden;
+    border-radius: 25px;
+  }
+  .sideBox{
+    display: flex;
+    width: 30vw;
+    max-width: 250px;
+    flex-direction: column;
+    height: 100vh;
+    text-align: left;
+    gap: 1rem;
   }
 }
+
+@media screen and (max-width: 1000px) {
+  .main{
+    width: 75vw;
+    max-width: 500px;
+    display: block;
+    margin: auto;
+  }
+  .topBox{
+    display: flex;
+    margin: auto;
+    align-items: center;
+    justify-content: space-between;
+    margin: 1rem 0 1rem 0;
+  }
+  .gameContainer{
+    display: flex;
+    flex-direction: column;
+  }
+}
+
 </style>

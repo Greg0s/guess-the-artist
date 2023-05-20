@@ -42,27 +42,59 @@ export default{
 </script>
 
 <style>
-    #textField{
-        border-radius: 25px;
-        height: 2rem;
-        width: auto;
-        display: block;
-        margin: auto;
-        border: none;
-        /* border: 1px solid var(--text-primary-color); */
-        width: 80%;
-        background: transparent;
-        /* margin-bottom: 1rem; */
-        color: var(--text-primary-color);
-    }
-    #textField:focus{
-        outline: none;
-    }
-    .textfield-box{
-        position: relative;
-    }
+#textField{
+    border-radius: 25px;
+    height: 2rem;
+    display: block;
+    background: transparent;
+    color: var(--text-primary-color);
+}
+#textField:focus{
+    outline: none;
+}
+.textfield-box{
+    position: relative;
+}
+
+.fields{
+    width:100%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+button.skip{
+    color: var(--text-primary-color);
+    border-radius: 15px;
+    background-color: var(--background-color-primary);
+    border : 1px solid var(--text-primary-color);
+    font-family: 'Inter', sans-serif;
+    height: 2rem;
+    margin-top: 1rem;
+    cursor: pointer;
+    transition: all  ease-in-out 0.2s;
+}
+button.skip:hover{
+    background-color: var(--accent-color);
+    color: var(--text-primary-color);
+    border:none;
+}
+#arrow{
+    fill: var(--text-primary-color);
+    width: 30px;
+    position: absolute;
+    right: 1.2rem;
+
+    height: 1rem;
+    border-radius: 0;
+    cursor: pointer;
+    transition: transform .2s ease-in-out;
+}
+#arrow:hover{
+    transform: translateX(5px);
+}
+
+@media screen and (max-width: 1000px) {
     #white-bg{
-        /* border: 1px solid var(--text-primary-color); */
         outline: 1px solid var(--text-primary-color);  /* inner stroke */
         outline-offset: -1px;  /* negative border width + outline width */
         text-align: start;
@@ -74,40 +106,31 @@ export default{
         border-radius: 25px;
         display: block;
     }
-    .fields{
-        width:100%;
-        display: flex;
-        justify-content: center;
-        flex-direction: column;
-    }
-    button.skip{
-        color: var(--text-primary-color);
-        border-radius: 15px;
-        background-color: var(--background-color-primary);
-        border : 1px solid var(--text-primary-color);
-        font-family: 'Inter', sans-serif;
-        height: 2rem;
-        margin-top: 1rem;
-        cursor: pointer;
-    }
-    button.skip:hover{
-        background-color: var(--accent-color);
-        color: var(--text-primary-color);
-        border:none;
+    #textField{
+        width: 71%;
+        padding: 0 3rem 0.3rem 1rem;
+        border: none;
+        margin: auto;
     }
     #arrow{
-        fill: var(--text-primary-color);
-        width: 30px;
-        position: absolute;
-        right: 1.5rem;
         bottom: 0.7rem;
-        background-color: var(--background-color-primary);
-        height: 1rem;
-        border-radius: 0;
-        cursor: pointer;
-        transition: transform .2s ease-in-out;
     }
-    #arrow:hover{
-        transform: translateX(5px);
+}
+
+@media screen and (min-width: 1001px) {
+    #textField{
+        border: solid 1px var(--text-primary-color);
+        width: 71%;
+        padding: 0 3.5rem 0 1rem;
     }
+
+    #textField:focus{
+        background-color: var(--accent-color);
+        border-color: var(--accent-color) ;
+    }
+    #arrow{
+        bottom: 0.5rem;
+    }
+}
+
 </style>

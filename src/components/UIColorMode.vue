@@ -92,7 +92,7 @@ export default {
 /* Define styles for the default root window element */
 :root {
   --background-color-primary: white;
-  --background-color-secondary: red;
+  --background-color-secondary: rgba(0, 0, 0, 0.2);
   --accent-color: rgba(182,234,218, 0.5);/*B6EADA*/
   --text-primary-color: black;
   --element-size: 4rem;
@@ -101,7 +101,7 @@ export default {
 /* Define styles for the root window with dark - mode preference */
 :root.dark-theme {
   --background-color-primary: #333333;
-  --background-color-secondary: orange;
+  --background-color-secondary: rgba(255, 255, 255, 0.4);
   --accent-color: rgba(182,234,218, 0.5);
   --text-primary-color: white;
 }
@@ -113,7 +113,8 @@ export default {
 }
 .card{
   position: absolute;
-  top: 1rem;
-  left: 1rem;
+  top: 1.3rem;
+  /* left: 1.3rem; */
+  right: 4rem;
 }
 </style>

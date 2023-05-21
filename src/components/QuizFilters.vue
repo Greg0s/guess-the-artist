@@ -40,7 +40,6 @@ export default{
     },
     methods: {
         checkGenre(){
-            console.log(this.checkedGenre);
             this.$emit('checkedGenre', { message : this.checkedGenre });
         },
         checkPeriod(){
@@ -51,32 +50,31 @@ export default{
 </script>
 
 <style>
+/*~~~~~~~~~~~~~~~~~~~~Filters - general~~~~~~~~~~~~~~~~~~~~~~~*/
+
+.filters{
+    display: flex;
+    align-items: center;
+}
 
 .filters:nth-of-type(1){
     margin-bottom: 0.3rem;
 }
 
-.filters{
-    display: flex;
-    align-items: center;
-    /* background-color: var(--accent-color);
-    border-radius: 15px; */
-}
+/*~~~~~~~~~~~~~~~~~~~~Filters - input & label~~~~~~~~~~~~~~~~~~~~~~~*/
+
 input{
     display: none;
 }
+
 label{
     padding: calc(var(--element-size) * 0.1);
     font-size: calc(var(--element-size) * 0.3);
     height: calc(var(--element-size) * 0.35);
     cursor: pointer;
     z-index: 1;
+}
 
-}
-input[type="radio"]:checked+label{
-    border-radius: 15px ;
-    background-color: var(--accent-color);
-}
 .label-text{
     font-family: 'Judson', 'serif';
     font-size: 1.2rem;
@@ -84,15 +82,21 @@ input[type="radio"]:checked+label{
     margin-right: 0.5rem;
 }
 
+input[type="radio"]+label{
+    transition: background-color 0.2s ease-in-out;
+    border-radius: 15px;
+}
+
+input[type="radio"]:checked+label{
+    background-color: var(--accent-color);
+}
+
 input[type="radio"]+label:hover{
     background-color: var(--background-color-secondary);
     z-index: 2;
 }
 
-input[type="radio"]+label{
-    transition: background-color 0.2s ease-in-out;
-    border-radius: 15px;
-}
+/*~~~~~~~~~~~~~~~~~~~~Responsive~~~~~~~~~~~~~~~~~~~~~~~*/
 
 @media screen and (min-width: 1001px) {
     .filters{

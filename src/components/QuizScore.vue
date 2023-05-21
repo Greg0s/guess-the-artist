@@ -29,47 +29,48 @@ export default{
 </script>
 
 <style>
-
-.value{
-    font-weight: bold;
-    font-size: 1.6rem;
-}
-.label{
-    font-weight: light;
-    font-size: 0.8rem;
-    font-family: 'Inter', sans-serif;
-}
-
-#results{
-    display: flex;
-    text-align: left;
-    outline: 1px solid var(--text-primary-color);  /* inner stroke */
-    outline-offset: -1px;  /* negative border width + outline width */
-    border-radius: 25px;
-    padding: 1rem;
-}
-
-@media screen and (max-width: 1000px) {
+    /*~~~~~~~~~~~~~~~~~~~~Results~~~~~~~~~~~~~~~~~~~~~~~*/
     #results{
-        width: 25%;
-        height: 25%;
-        flex-direction: column;
+        display: flex;
+        text-align: left;
+        outline: 1px solid var(--text-primary-color);  /* inner stroke */
+        outline-offset: -1px;  /* negative border width + outline width */
+        border-radius: 25px;
+        padding: 1rem;
     }
+    
     .value{
-        font-size: 1.5rem;
+        font-weight: bold;
+        font-size: 1.6rem;
     }
-    .label{
-        font-size: 0.8rem;
-    }
-}
 
-@media screen and (min-width: 1001px) {
-    #results{
-        flex-direction: row;
-        justify-content: space-between;
+    .label{
+        font-weight: light;
+        font-size: 0.8rem;
+        font-family: 'Inter', sans-serif;
     }
-    .label:nth-child(1){
-        margin-right: 2rem;
+
+    /*~~~~~~~~~~~~~~~~~~~~Responsive~~~~~~~~~~~~~~~~~~~~~~~*/
+
+    @media screen and (max-width: 1000px) {
+        #results{
+            width: 25%;
+            height: 25%;
+            flex-direction: column;
+        }
+        .value{
+            font-size: 1.5rem;
+        }
     }
-}
+
+    @media screen and (min-width: 1001px) {
+        #results{
+            flex-direction: row;
+            justify-content: space-between;
+        }
+        /* Right offset correct rate */
+        .label:nth-child(1){
+            margin-right: 2rem;
+        }
+    }
 </style>

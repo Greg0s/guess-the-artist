@@ -4,9 +4,6 @@ let bearerSpotify = "";
 let playlist = ['0XXN2jKGfxhnAxzosyjJbd','7oBeEkujcRybm7dCAUAIhG', '68BOljqWA5DyNsTXE5qbXr', '0g5bk8atjp6cIeN5WbS4B9', '230z2ul4DpViQvSdHwkuQr'];
 let playlistNb = 0;
 
-//const playlist = '1ISSOeZLHpzuOJ0CdSYwgD'
-//const playlist = '37i9dQZF1DWTIfBdh7WtFL'
-
 let spotify = {
     async getAccessToken(){
         let res = await fetch('https://accounts.spotify.com/api/token?grant_type=client_credentials', {
@@ -23,7 +20,7 @@ let spotify = {
     },
     async getSongs(playlist){   
         if(bearerSpotify == ""){await newToken()}
-        let res = await fetch('https://api.spotify.com/v1/playlists/' + playlist + '/tracks?limit=20', {
+        let res = await fetch('https://api.spotify.com/v1/playlists/' + playlist + '/tracks?limit=2', {
             method: "GET",
             headers: {
                 "Authorization" : "Bearer " + bearerSpotify
@@ -109,12 +106,15 @@ let spotify = {
       }
 }
 
+// functions for internal use only
+// token getter
 async function newToken(){
     bearerSpotify = await spotify.getAccessToken();
     bearerSpotify = bearerSpotify.access_token;
 }
 setInterval(newToken(), 1000 * 60 * 60);
 
+//shuffle playlist
 function shuffle(array) {
     let currentIndex = array.length,  randomIndex;
   

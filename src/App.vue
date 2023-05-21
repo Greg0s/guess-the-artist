@@ -58,7 +58,6 @@ export default {
   async created() {
     document.title = 'Guess The Artist';
     await this.createDatabase();
-    console.log(this.database);
     this.play();
   },
   data() {
@@ -211,10 +210,8 @@ export default {
     setArtistInfos(){
       this.artistId = this.currentDatabase[0]["id"];
       this.artistName = this.currentDatabase[0]["name"];
-      console.log(this.artistName);
       this.artistPeriod = this.currentDatabase[0]["period"];
       this.artistGenres = this.currentDatabase[0]["genres"];
-      console.log(this.artistGenres);
       this.artistImg = this.currentDatabase[0]["img"];
     },
     async next(){

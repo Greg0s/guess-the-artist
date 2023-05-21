@@ -7,28 +7,28 @@
 
   <!--~~~~~~~~~~~~~~~~~~Desktop >= 800px~~~~~~~~~~~~~~~~~~~~-->
   <div v-if="windowWidth > 1000" class="main">
-    <div class="coverBox">
-      <QuizCover :imgSource="artistImg"/>
+    <div class="cover-box">
+      <QuizImg :imgSource="artistImg"/>
     </div>
-    <div class="sideBox">
-      <h1 class="title">Guess The Artist</h1>
+    <div class="side-box">
+      <h1>Guess The Artist</h1>
       <QuizFilters @checkedGenre="getGenreFilter" @checkedPeriod="getPeriodFilter" />
-      <QuizScore :gameScore="score" :total="attemptsNb" :gameSR="successRate" />
+      <QuizScore :gameScore="score" :total="attemptsNb" :gameSR="correctRate" />
       <QuizHistory class="history" :lastArtistName="lastArtist" :imgSource="lastArtistImg"/>
       <QuizAnswerField @attempt="checkAnswer" @skip="skipArtist" />
     </div>
   </div>
   <!--~~~~~~~~~~~~~~~~~~Mobile < 800px~~~~~~~~~~~~~~~~~~~~-->
   <div v-else class="main">
-    <h1 class="title">Guess The Artist</h1>
+    <h1>Guess The Artist</h1>
     <QuizFilters @checkedGenre="getGenreFilter" @checkedPeriod="getPeriodFilter" />
-    <div class="gameContainer">
-      <div class="topBox">
-        <QuizScore :gameScore="score" :total="attemptsNb" :gameSR="successRate" />
+    <div class="game-container">
+      <div class="top-box">
+        <QuizScore :gameScore="score" :total="attemptsNb" :gameSR="correctRate" />
         <QuizHistory class="history" :lastArtistName="lastArtist" :imgSource="lastArtistImg"/>
       </div>
-      <div class="coverBox">
-        <QuizCover :imgSource="artistImg"/>
+      <div class="cover-box">
+        <QuizImg :imgSource="artistImg"/>
         <QuizAnswerField @attempt="checkAnswer" @skip="skipArtist" />
       </div>
     </div>
@@ -38,7 +38,7 @@
 
 <script>
 import QuizFilters from './components/QuizFilters.vue'
-import QuizCover from './components/QuizCover.vue'
+import QuizImg from './components/QuizImg.vue'
 import QuizAnswerField from './components/QuizAnswerField.vue'
 import QuizScore from './components/QuizScore.vue'
 import QuizHistory from './components/QuizHistory.vue'
@@ -49,7 +49,7 @@ export default {
   name: 'App',
   components: {
     QuizFilters,
-    QuizCover,
+    QuizImg,
     QuizAnswerField,
     QuizScore, 
     QuizHistory,
@@ -71,7 +71,7 @@ export default {
       artistImg : "",
 
       score : 0,
-      successRate : 0,
+      correctRate : 0,
       attemptsNb : 0,
 
       genre:"all",
@@ -84,23 +84,12 @@ export default {
 
       database : "",
       currentDatabase : "",
-      cpt: 0
     }
   },
   methods :{
+    // For responsive v-if
     handleWindowResize() {
       this.windowWidth = window.innerWidth;
-    },
-    //for debugging
-    printDb(){
-      let text = "currentdb = ";
-      let cpt = 0;
-      this.currentDatabase.forEach(artist => {
-        text += artist['name'];
-        cpt++;
-      });
-      console.log(text);
-      console.log("cpt = ", cpt);
     },
     // Check user answer
     async checkAnswer(payload){
@@ -111,19 +100,19 @@ export default {
         await this.next();
         this.score ++;
       }
-      this.updateSR();
+      this.updateCR();
     },
     // Skip button
     async skipArtist(){
       this.attemptsNb ++;
       this.setLastArtist();
       await this.next();
-      this.updateSR();
+      this.updateCR();
     },
-    // Score rate
-    updateSR(){
+    // Correct rate
+    updateCR(){
       if(this.attemptsNb > 0){
-        this.successRate = Math.floor(this.score*100/this.attemptsNb);
+        this.correctRate = Math.floor(this.score*100/this.attemptsNb);
       }
     },
     // Filters
@@ -170,7 +159,6 @@ export default {
       }
     },
     merged(db1, db2){
-      //let merged = {...db1, ...db2};
       let merged = [];
       db1.forEach(artist => {
         if(this.dbIncludes(db2, artist)){
@@ -180,13 +168,16 @@ export default {
       if(merged.length != 0){
         return merged;
       }else{// if merge empty
-        // TO-DO: set filters to all here
-        document.getElementById(this.genre).checked = false;
-        document.getElementById(this.period).checked = false;
-        this.genre = 'all';
-        this.period = 'all';
-        document.getElementById("all-genre").checked = true;
-        document.getElementById("all-period").checked = true;
+        if(this.genre != 'all'){
+          document.getElementById(this.genre).checked = false;
+          this.genre = 'all';
+          document.getElementById("all-genre").checked = true;
+        }
+        if(this.period != 'all'){
+          document.getElementById(this.period).checked = false;
+          this.period = 'all';
+          document.getElementById("all-period").checked = true;
+        }
         return this.database;
       }
     },
@@ -208,9 +199,6 @@ export default {
     async createDatabase(){
       this.database = await spotify.createDatabase();
       this.database = JSON.parse(this.database);
-      this.currentDatabase = this.database;
-    },
-    initCurrentDatabase(){
       this.currentDatabase = this.database;
     },
     cleanCurrentDb(){
@@ -237,7 +225,6 @@ export default {
         await this.setFilter();
       }
       this.setArtistInfos();
-      this.printDb();
     },
     play(){
       this.setArtistInfos();
@@ -255,7 +242,7 @@ export default {
 
 <style>
 
-/*~~~~~~~~~~~~~~~~GENERAL~~~~~~~~~~~~~~~~*/
+/*~~~~~~~~~~~~~~~~General~~~~~~~~~~~~~~~~*/
 
 :root{
   background-color: var(--background-color-primary);
@@ -276,24 +263,21 @@ h1{
   font-family: 'Judson', serif;
 }
 
-#main{
-  display: block;
-  margin: auto;
-}
+/*~~~~~~~~~~~~~~~~Responsive~~~~~~~~~~~~~~~~*/
 
 @media screen and (min-width: 1001px) {
   .main{
     display: flex;
     gap: 3rem;
   }
-  .coverBox{
+  .cover-box{
     display: block;
     width: 50vw;
     height: 100vh;
     overflow: hidden;
     border-radius: 25px;
   }
-  .sideBox{
+  .side-box{
     display: flex;
     width: 30vw;
     max-width: 250px;
@@ -311,14 +295,14 @@ h1{
     display: block;
     margin: auto;
   }
-  .topBox{
+  .top-box{
     display: flex;
     margin: auto;
     align-items: center;
     justify-content: space-between;
     margin: 1rem 0 1rem 0;
   }
-  .gameContainer{
+  .game-container{
     display: flex;
     flex-direction: column;
   }

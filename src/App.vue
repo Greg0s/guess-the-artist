@@ -243,7 +243,7 @@ export default {
 
 :root{
   background-color: var(--background-color-primary);
-  transition: background-color ease 0.5s;
+  transition: all ease 0.5s;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;

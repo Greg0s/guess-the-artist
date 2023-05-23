@@ -20,7 +20,7 @@ let spotify = {
     },
     async getSongs(playlist){   
         if(bearerSpotify == ""){await newToken()}
-        let res = await fetch('https://api.spotify.com/v1/playlists/' + playlist + '/tracks?limit=2', {
+        let res = await fetch('https://api.spotify.com/v1/playlists/' + playlist + '/tracks', {
             method: "GET",
             headers: {
                 "Authorization" : "Bearer " + bearerSpotify

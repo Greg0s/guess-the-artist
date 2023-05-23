@@ -50,6 +50,7 @@ export default{
     display: block;
     background: transparent;
     color: var(--text-primary-color);
+    transition: all ease 0.2s;
 }
 
 #text-field:focus{

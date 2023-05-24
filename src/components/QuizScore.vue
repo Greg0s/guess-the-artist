@@ -2,7 +2,7 @@
     <div id="results">
         <div>
             <span class="label">Score</span><br> 
-            <span class="value">{{ gameScore }} / {{ total }}</span>
+            <span class="value" id="score">{{ gameScore }} / {{ total }}</span>
         </div>
         <div>
             <span class="label">Correct</span><br> 
@@ -14,11 +14,6 @@
 <script>
 export default{
     name: 'QuizScore',
-    methods: {
-        setCover(){
-         console.log('hello')
-        }
-    }, 
     props: {
         gameScore : Number,
         gameSR : Number,

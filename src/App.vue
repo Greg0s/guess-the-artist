@@ -13,6 +13,7 @@
     <div class="side-box">
       <h1>Guess The Artist</h1>
       <QuizFilters @checkedGenre="getGenreFilter" @checkedPeriod="getPeriodFilter" />
+      <QuizReset @reset="resetScore"/>
       <QuizScore :gameScore="score" :total="attemptsNb" :gameSR="correctRate" />
       <QuizHistory class="history" :lastArtistName="lastArtist" :imgSource="lastArtistImg"/>
       <QuizAnswerField @attempt="checkAnswer" @skip="skipArtist" />
@@ -22,6 +23,7 @@
   <div v-else class="main">
     <h1>Guess The Artist</h1>
     <QuizFilters @checkedGenre="getGenreFilter" @checkedPeriod="getPeriodFilter" />
+    <QuizReset/>
     <div class="game-container">
       <div class="top-box">
         <QuizScore :gameScore="score" :total="attemptsNb" :gameSR="correctRate" />
@@ -42,6 +44,7 @@ import QuizImg from './components/QuizImg.vue'
 import QuizAnswerField from './components/QuizAnswerField.vue'
 import QuizScore from './components/QuizScore.vue'
 import QuizHistory from './components/QuizHistory.vue'
+import QuizReset from './components/QuizReset.vue'
 import UIColorMode from './components/UIColorMode.vue'
 import spotify from './services/api/spotify.js'
 
@@ -53,10 +56,12 @@ export default {
     QuizAnswerField,
     QuizScore, 
     QuizHistory,
+    QuizReset,
     UIColorMode
   }, 
   async created() {
     document.title = 'Guess The Artist';
+    this.getScoreUser();
     await this.createDatabase();
     this.play();
   },
@@ -92,27 +97,49 @@ export default {
     },
     // Check user answer
     async checkAnswer(payload){
-      this.attemptsNb ++;
+      this.addAttempt();
       let userAnswer = payload.message.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
       if(this.artistName.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase() == userAnswer.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase()){
         this.setLastArtist();
         await this.next();
-        this.score ++;
+        this.addScore();
       }
       this.updateCR();
     },
-    // Skip button
-    async skipArtist(){
+    // Score
+    addScore(){
+      this.score ++;
+      localStorage.setItem("user-score", this.score);
+    },
+    addAttempt(){
       this.attemptsNb ++;
-      this.setLastArtist();
-      await this.next();
-      this.updateCR();
+      localStorage.setItem("user-attempts", this.attemptsNb);
+    },
+    getScoreUser() {
+      if(localStorage.getItem("user-attempts", this.attemptsNb)){
+        this.score = parseInt(localStorage.getItem("user-score"));
+        this.attemptsNb = parseInt(localStorage.getItem("user-attempts", this.attemptsNb));
+        this.correctRate = parseInt(localStorage.getItem("user-cr", this.attemptsNb));
+      }
+    },
+    resetScore(){
+      this.score = 0;
+      this.attemptsNb = 0;
+      this.correctRate = 0;
     },
     // Correct rate
     updateCR(){
       if(this.attemptsNb > 0){
         this.correctRate = Math.floor(this.score*100/this.attemptsNb);
+        localStorage.setItem("user-cr", this.correctRate);
       }
+    },
+    // Skip button
+    async skipArtist(){
+      this.addAttempt();
+      this.setLastArtist();
+      await this.next();
+      this.updateCR();
     },
     // Filters
     async getGenreFilter(payload){

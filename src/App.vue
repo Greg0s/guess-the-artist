@@ -6,12 +6,12 @@
   <UIColorMode></UIColorMode>
 
   <!--~~~~~~~~~~~~~~~~~~Desktop >= 800px~~~~~~~~~~~~~~~~~~~~-->
+  <QuizHeader/>
   <div v-if="windowWidth > 1000" class="main">
     <div class="cover-box">
       <QuizImg :imgSource="artistImg"/>
     </div>
     <div class="side-box">
-      <h1>Guess The Artist</h1>
       <QuizFilters @checkedGenre="getGenreFilter" @checkedPeriod="getPeriodFilter" />
       <QuizReset @reset="resetScore"/>
       <QuizScore :gameScore="score" :total="attemptsNb" :gameSR="correctRate" />
@@ -21,7 +21,6 @@
   </div>
   <!--~~~~~~~~~~~~~~~~~~Mobile < 800px~~~~~~~~~~~~~~~~~~~~-->
   <div v-else class="main">
-    <h1>Guess The Artist</h1>
     <QuizFilters @checkedGenre="getGenreFilter" @checkedPeriod="getPeriodFilter" />
     <QuizReset/>
     <div class="game-container">
@@ -35,10 +34,12 @@
       </div>
     </div>
   </div>
-
+  <QuizFooter/>
 </template>
 
 <script>
+import QuizHeader from './components/QuizHeader.vue'
+import QuizFooter from './components/QuizFooter.vue'
 import QuizFilters from './components/QuizFilters.vue'
 import QuizImg from './components/QuizImg.vue'
 import QuizAnswerField from './components/QuizAnswerField.vue'
@@ -51,6 +52,8 @@ import spotify from './services/api/spotify.js'
 export default {
   name: 'App',
   components: {
+    QuizHeader,
+    QuizFooter,
     QuizFilters,
     QuizImg,
     QuizAnswerField,
@@ -284,10 +287,6 @@ body{
   margin: 0;
 }
 
-h1{
-  font-family: 'Judson', serif;
-}
-
 /*~~~~~~~~~~~~~~~~Responsive~~~~~~~~~~~~~~~~*/
 
 @media screen and (min-width: 1001px) {
@@ -298,7 +297,6 @@ h1{
   .cover-box{
     display: block;
     width: 50vw;
-    height: 100vh;
     overflow: hidden;
     border-radius: 25px;
   }
@@ -307,7 +305,6 @@ h1{
     width: 30vw;
     max-width: 250px;
     flex-direction: column;
-    height: 100vh;
     text-align: left;
     gap: 1rem;
   }

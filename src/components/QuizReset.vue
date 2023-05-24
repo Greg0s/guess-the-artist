@@ -14,7 +14,6 @@ export default {
 </script>
 
 <style>
-  /*~~~~~~~~~~~~~~~~~~~~Artist image~~~~~~~~~~~~~~~~~~~~~~~*/
   .reset{
     width: 8rem;
     margin: auto;

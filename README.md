@@ -1,11 +1,11 @@
 # Guess The Artist
-<img src="https://i.imgur.com/SZKZOmT.jpg"  width="600" >
+<img src="https://imgur.com/a/G64pfeo"  width="600" >
 
 ## Project description
 Find the artist's name from its picture!<br>
 Made using the [Spotify API](https://developer.spotify.com/documentation/web-api/).
 <br>
-[Play here](https://greg0s.github.io/guess-the-artist) (not finished, still under development ⚠️)
+[Play here](https://greg0s.github.io/guess-the-artist)
 
 
 

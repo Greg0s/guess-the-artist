@@ -1,3 +1,6 @@
+#chmod +x deploy.sh
+#./deploy.sh
+
 #!/usr/bin/env sh
 
 # abort on errors

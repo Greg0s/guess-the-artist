@@ -1,5 +1,5 @@
 # Guess The Artist
-<img src="https://imgur.com/a/G64pfeo"  width="600" >
+<img src="https://i.imgur.com/0kAdSjE.png"  width="600" >
 
 ## Project description
 Find the artist's name from its picture!<br>

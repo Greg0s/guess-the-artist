@@ -1,7 +1,7 @@
 import { idSpotify } from './apiKey.js';
 let bearerSpotify = "";
 
-let playlist = ['0XXN2jKGfxhnAxzosyjJbd','7oBeEkujcRybm7dCAUAIhG', '68BOljqWA5DyNsTXE5qbXr', '0g5bk8atjp6cIeN5WbS4B9', '230z2ul4DpViQvSdHwkuQr'];
+let playlist = ['0XXN2jKGfxhnAxzosyjJbd', '68BOljqWA5DyNsTXE5qbXr', '0g5bk8atjp6cIeN5WbS4B9', '230z2ul4DpViQvSdHwkuQr', '7oBeEkujcRybm7dCAUAIhG'];
 let playlistNb = 0;
 
 let spotify = {

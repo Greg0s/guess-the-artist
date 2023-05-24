@@ -7,7 +7,7 @@
                 <path d="M17.7652 3.26517C17.9116 3.11872 17.9116 2.88128 17.7652 2.73483L15.3787 0.34835C15.2322 0.201903 14.9948 0.201903 14.8483 0.34835C14.7019 0.494796 14.7019 0.732233 14.8483 0.87868L16.9697 3L14.8483 5.12132C14.7019 5.26777 14.7019 5.5052 14.8483 5.65165C14.9948 5.7981 15.2322 5.7981 15.3787 5.65165L17.7652 3.26517ZM0 3.375H17.5V2.625H0V3.375Z"/>
             </svg>
         </div>
-        <button class="skip" @click="skip">Skip</button>
+        <button class="btn skip" @click="skip">Skip</button>
     </div>
 </template>
 
@@ -70,19 +70,22 @@ export default{
 
 /*~~~~~~~~~~~~~~~~~~~~Skip btn~~~~~~~~~~~~~~~~~~~~~~~*/
 
-button.skip{
+button.btn{
     color: var(--text-primary-color);
     border-radius: 15px;
     background-color: var(--background-color-primary);
     border : 1px solid var(--text-primary-color);
     font-family: 'Inter', sans-serif;
     height: 2rem;
-    margin-top: 1rem;
     cursor: pointer;
     transition: all ease-in-out 0.2s;
 }
 
-button.skip:hover{
+.skip{
+    margin-top: 1rem;
+}
+
+button.btn:hover{
     background-color: var(--accent-color);
     color: var(--text-primary-color);
     border:none;

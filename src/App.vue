@@ -5,7 +5,7 @@
 
   <UIColorMode></UIColorMode>
 
-  <!--~~~~~~~~~~~~~~~~~~Desktop >= 800px~~~~~~~~~~~~~~~~~~~~-->
+  <!--~~~~~~~~~~~~~~~~~~Desktop >= 1000px~~~~~~~~~~~~~~~~~~~~-->
   <QuizHeader/>
   <div v-if="windowWidth > 1000" class="main">
     <div class="cover-box">
@@ -19,10 +19,10 @@
       <QuizAnswerField @attempt="checkAnswer" @skip="skipArtist" />
     </div>
   </div>
-  <!--~~~~~~~~~~~~~~~~~~Mobile < 800px~~~~~~~~~~~~~~~~~~~~-->
+  <!--~~~~~~~~~~~~~~~~~~Mobile < 1000px~~~~~~~~~~~~~~~~~~~~-->
   <div v-else class="main">
     <QuizFilters @checkedGenre="getGenreFilter" @checkedPeriod="getPeriodFilter" />
-    <QuizReset/>
+    <QuizReset @reset="resetScore"/>
     <div class="game-container">
       <div class="top-box">
         <QuizScore :gameScore="score" :total="attemptsNb" :gameSR="correctRate" />

@@ -296,9 +296,11 @@ body{
   }
   .cover-box{
     display: block;
-    width: 50vw;
+    max-width: 50vw;
+    min-width: 40vw;
     overflow: hidden;
     border-radius: 25px;
+    padding-left: 3rem;
   }
   .side-box{
     display: flex;
